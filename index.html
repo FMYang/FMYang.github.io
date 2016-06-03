@@ -305,6 +305,886 @@
 
 
     
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/06/02/Markdown编写接口文档/" itemprop="url">
+                  Markdown编写接口文档
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-02T16:45:36+08:00" content="2016-06-02">
+              2016-06-02
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/02/Markdown编写接口文档/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/02/Markdown编写接口文档/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="微博接口文档"><a href="#微博接口文档" class="headerlink" title="微博接口文档"></a>微博接口文档</h1><hr>
+<p>[TOC]</p>
+<h3 id="一、读取接口"><a href="#一、读取接口" class="headerlink" title="一、读取接口"></a>一、读取接口</h3><h4 id="1、获取最新的公共微博"><a href="#1、获取最新的公共微博" class="headerlink" title="1、获取最新的公共微博"></a>1、获取最新的公共微博</h4><p>URL<br><a href="https://api.weibo.com/2/statuses/public_timeline.json" target="_blank" rel="external">https://api.weibo.com/2/statuses/public_timeline.json</a></p>
+<p>支持格式<br>JSON</p>
+<p>HTTP请求方式<br>GET</p>
+<p>是否需要登陆<br>是</p>
+<p>请求参数<br>|  参数       | 必选    |  类型及范围   |    说明                                    |<br>|:———–:      | :———–:      |   :———–:       |   :———–:                                |<br>| access_token  | true    |   string     | 采用OAuth授权方式为必填参数，OAuth授权后获得。|<br>| page          | false   |   int        | 单页返回的记录条数，默认为50。                |<br>| count         | false   |   int        | 返回结果的页码，默认为1。                    |</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>类型及范围</th>
+<th>说明                                    </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> access_token</td>
+<td>true</td>
+<td>string</td>
+<td>采用OAuth授权方式为必填参数，OAuth授权后获得。</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>width</td>
+<td>设置layout viewport  的宽度，为一个正整数，或字符串”width-device”</td>
+</tr>
+<tr>
+<td>initial-scale</td>
+<td>设置页面的初始缩放值，为一个数字，可以带小数</td>
+</tr>
+<tr>
+<td>minimum-scale</td>
+<td>允许用户的最小缩放值，为一个数字，可以带小数</td>
+</tr>
+<tr>
+<td>maximum-scale</td>
+<td>允许用户的最大缩放值，为一个数字，可以带小数</td>
+</tr>
+<tr>
+<td>height</td>
+<td>设置layout viewport  的高度，这个属性对我们并不重要，很少使用</td>
+</tr>
+<tr>
+<td>user-scalable</td>
+<td>是否允许用户进行缩放，值为”no”或”yes”, no 代表不允许，yes代表允许</td>
+</tr>
+</tbody>
+</table>
+<table><br><br><tr><br><td>参数</td><br><td>必选</td><br><td>类型及范围</td><br><td>说明</td><br></tr><br><br><tr><br><td>access_token</td><br><td>true</td><br><td>string</td><br><td>采用OAuth授权方式为必填参数，OAuth授权后获得。</td><br></tr><br><br></table>
+
+<p>返回结果<br><code>json示例</code><br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"statuses"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"created_at"</span>: <span class="string">"Tue May 31 17:46:55 +0800 2011"</span>,</span><br><span class="line">            <span class="attr">"id"</span>: <span class="number">11488058246</span>,</span><br><span class="line">            <span class="attr">"text"</span>: <span class="string">"求关注。"</span>，</span><br><span class="line">            <span class="string">"source"</span>: <span class="string">"&lt;a href="</span>http://weibo.com<span class="string">" rel="</span>nofollow<span class="string">"&gt;新浪微博&lt;/a&gt;"</span>,</span><br><span class="line">            <span class="attr">"favorited"</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">"truncated"</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">"in_reply_to_status_id"</span>: <span class="string">""</span>,</span><br><span class="line">            <span class="attr">"in_reply_to_user_id"</span>: <span class="string">""</span>,</span><br><span class="line">            <span class="attr">"in_reply_to_screen_name"</span>: <span class="string">""</span>,</span><br><span class="line">            <span class="attr">"geo"</span>: <span class="literal">null</span>,</span><br><span class="line">            <span class="attr">"mid"</span>: <span class="string">"5612814510546515491"</span>,</span><br><span class="line">            <span class="attr">"reposts_count"</span>: <span class="number">8</span>,</span><br><span class="line">            <span class="attr">"comments_count"</span>: <span class="number">9</span>,</span><br><span class="line">            <span class="attr">"annotations"</span>: [],</span><br><span class="line">            <span class="attr">"user"</span>: &#123;</span><br><span class="line">                <span class="attr">"id"</span>: <span class="number">1404376560</span>,</span><br><span class="line">                <span class="attr">"screen_name"</span>: <span class="string">"zaku"</span>,</span><br><span class="line">                <span class="attr">"name"</span>: <span class="string">"zaku"</span>,</span><br><span class="line">                <span class="attr">"province"</span>: <span class="string">"11"</span>,</span><br><span class="line">                <span class="attr">"city"</span>: <span class="string">"5"</span>,</span><br><span class="line">                <span class="attr">"location"</span>: <span class="string">"北京 朝阳区"</span>,</span><br><span class="line">                <span class="attr">"description"</span>: <span class="string">"人生五十年，乃如梦如幻；有生斯有死，壮士复何憾。"</span>,</span><br><span class="line">                <span class="attr">"url"</span>: <span class="string">"http://blog.sina.com.cn/zaku"</span>,</span><br><span class="line">                <span class="attr">"profile_image_url"</span>: <span class="string">"http://tp1.sinaimg.cn/1404376560/50/0/1"</span>,</span><br><span class="line">                <span class="attr">"domain"</span>: <span class="string">"zaku"</span>,</span><br><span class="line">                <span class="attr">"gender"</span>: <span class="string">"m"</span>,</span><br><span class="line">                <span class="attr">"followers_count"</span>: <span class="number">1204</span>,</span><br><span class="line">                <span class="attr">"friends_count"</span>: <span class="number">447</span>,</span><br><span class="line">                <span class="attr">"statuses_count"</span>: <span class="number">2908</span>,</span><br><span class="line">                <span class="attr">"favourites_count"</span>: <span class="number">0</span>,</span><br><span class="line">                <span class="attr">"created_at"</span>: <span class="string">"Fri Aug 28 00:00:00 +0800 2009"</span>,</span><br><span class="line">                <span class="attr">"following"</span>: <span class="literal">false</span>,</span><br><span class="line">                <span class="attr">"allow_all_act_msg"</span>: <span class="literal">false</span>,</span><br><span class="line">                <span class="attr">"remark"</span>: <span class="string">""</span>,</span><br><span class="line">                <span class="attr">"geo_enabled"</span>: <span class="literal">true</span>,</span><br><span class="line">                <span class="attr">"verified"</span>: <span class="literal">false</span>,</span><br><span class="line">                <span class="attr">"allow_all_comment"</span>: <span class="literal">true</span>,</span><br><span class="line">                <span class="attr">"avatar_large"</span>: <span class="string">"http://tp1.sinaimg.cn/1404376560/180/0/1"</span>,</span><br><span class="line">                <span class="attr">"verified_reason"</span>: <span class="string">""</span>,</span><br><span class="line">                <span class="attr">"follow_me"</span>: <span class="literal">false</span>,</span><br><span class="line">                <span class="attr">"online_status"</span>: <span class="number">0</span>,</span><br><span class="line">                <span class="attr">"bi_followers_count"</span>: <span class="number">215</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        ..</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"previous_cursor"</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">"next_cursor"</span>: <span class="number">11488013766</span>,</span><br><span class="line">    <span class="attr">"total_number"</span>: <span class="number">81655</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="2、获取当前登录用户及其所关注用户的最新微博"><a href="#2、获取当前登录用户及其所关注用户的最新微博" class="headerlink" title="2、获取当前登录用户及其所关注用户的最新微博"></a>2、获取当前登录用户及其所关注用户的最新微博</h4>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/04/20/安装cocoapods/" itemprop="url">
+                  安装cocoapods
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-20T15:10:48+08:00" content="2016-04-20">
+              2016-04-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/20/安装cocoapods/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/20/安装cocoapods/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>1、查看当前Ruby源</p>
+<pre><code>gem sources -1
+</code></pre><p>2、如果是默认Ruby源（被墙），删除默认源，修改为淘宝的镜像</p>
+<pre><code>删除默认源
+gem sources --remove https://rubygems.org/
+
+修改为淘宝源
+gem sources -a https://ruby.taobao.org/
+</code></pre><p>3、重复1步骤,看到下面结果表示更换ruby源成功</p>
+<pre><code>*** CURRENT SOURCES ***
+
+https://ruby.taobao.org
+</code></pre><p>4、安装cocospods</p>
+<pre><code>sudo gem install cocoapods
+
+注意：苹果系统升级 OS X EL Capitan 后使用
+sudo gem install -n /usr/local/bin cocoapods
+</code></pre><p>5、设置cocoapods环境</p>
+<pre><code>gem setup
+</code></pre><p>这步会下载repos文件，大概300多M，耗时较多，请耐心等待<br>我们可以使用如下命令查看下载进度</p>
+<pre><code>cd ~/.cocoapods
+du -sh
+</code></pre><p>6、更新gem</p>
+<pre><code>sudo gem update --system
+</code></pre><p>7、新建工程，cd到工程目录</p>
+<pre><code>pod search 第三方库
+</code></pre><p>8、创建Podfile文件</p>
+<pre><code>vi Podfile
+</code></pre><p>9、编辑Podfile文件，可参考cocoapods官网<a href="https://guides.cocoapods.org/using/the-podfile.html" target="_blank" rel="external">podfile文件</a></p>
+<pre><code>inhibit_all_warnings!
+platform :ios, &apos;8.0&apos;
+
+target &apos;NewsApp&apos; do
+pod &apos;AFNetworking&apos;, &apos;~&gt;2.5.0&apos;
+end
+</code></pre><p>10、安装pod</p>
+<pre><code>pod install --verbose --no-repo-update
+</code></pre><p>参考<br><a href="https://guides.cocoapods.org/" target="_blank" rel="external">cocoapods官网</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/04/12/使用命令行添加已存在的工程到GitHub/" itemprop="url">
+                  使用命令行添加已存在的工程到GitHub
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-12T23:23:32+08:00" content="2016-04-12">
+              2016-04-12
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/12/使用命令行添加已存在的工程到GitHub/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/12/使用命令行添加已存在的工程到GitHub/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h5 id="一、在Github主页创建新的仓库"><a href="#一、在Github主页创建新的仓库" class="headerlink" title="一、在Github主页创建新的仓库"></a>一、在Github主页创建新的仓库</h5><p><img src="http://7xs5fu.com1.z0.glb.clouddn.com/blog_createGit%20Repository_UHPCWL%294_5MGNJ9C67%7B%5DQ%60E.jpg" alt=""></p>
+<ol>
+<li>添加项目名</li>
+<li>添加项目描述</li>
+<li>创建忽略文件</li>
+<li>创建声明文件</li>
+</ol>
+<h5 id="二、打开命令行，cd到等待提交的工程目录"><a href="#二、打开命令行，cd到等待提交的工程目录" class="headerlink" title="二、打开命令行，cd到等待提交的工程目录"></a>二、打开命令行，cd到等待提交的工程目录</h5><h5 id="三、初始化本地目录作为git本地仓库"><a href="#三、初始化本地目录作为git本地仓库" class="headerlink" title="三、初始化本地目录作为git本地仓库"></a>三、初始化本地目录作为git本地仓库</h5><pre><code>git init
+</code></pre><h5 id="四、添加文件到本地仓库，暂存文件"><a href="#四、添加文件到本地仓库，暂存文件" class="headerlink" title="四、添加文件到本地仓库，暂存文件"></a>四、添加文件到本地仓库，暂存文件</h5><pre><code>git add .
+</code></pre><h5 id="五、提交暂存的文件"><a href="#五、提交暂存的文件" class="headerlink" title="五、提交暂存的文件"></a>五、提交暂存的文件</h5><pre><code>git commit -m &quot;First commit&quot;
+</code></pre><h5 id="六、添加别名"><a href="#六、添加别名" class="headerlink" title="六、添加别名"></a>六、添加别名</h5><pre><code>git remote add origin remote repository URL
+添加别名
+git remote -v
+验证别名
+</code></pre><h5 id="七、合并远程仓库到本地仓库"><a href="#七、合并远程仓库到本地仓库" class="headerlink" title="七、合并远程仓库到本地仓库"></a>七、合并远程仓库到本地仓库</h5><pre><code>git pull origin master
+</code></pre><h5 id="八、提交本地仓库的变更到远程仓库"><a href="#八、提交本地仓库的变更到远程仓库" class="headerlink" title="八、提交本地仓库的变更到远程仓库"></a>八、提交本地仓库的变更到远程仓库</h5><pre><code>git push origin master
+</code></pre>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/04/05/SDWebImage源码学习-清理缓存机制/" itemprop="url">
+                  SDWebImage源码学习-缓存清理机制
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-05T21:47:56+08:00" content="2016-04-05">
+              2016-04-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/05/SDWebImage源码学习-清理缓存机制/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/05/SDWebImage源码学习-清理缓存机制/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>前段时间群里有人问sd缓存的图片需要手动清除？</p>
+<p>这类问题反映了一个普遍现象：我们在项目开发的时候，使用一些第三方框架，往往只是会使用，却很少去看源码（知其然，不知其所以然）。当然，导致这种现象的原因很多：项目开发时间紧、看不懂、懒等等因素</p>
+<p><strong>但想要提高技术水平，阅读优秀的源码其实是很有必要也很高效的</strong></p>
+<p>好的，扯了一堆废话，现在打开SD源码，看看它是如何清理缓存的</p>
+<p>我们打开SDImageCache.h头文件，从类名可以看出缓存是在这个类处理的</p>
+<p>接口声明上方有这么段注释<br>    /**</p>
+<pre><code>* SDImageCache maintains a memory cache and an optional disk cache. Disk cache write operations are performed
+* asynchronous so it doesn’t add unnecessary latency to the UI.
+*/
+</code></pre><p>通过注释我们知道SDImageCache包含内存缓存和磁盘缓存，写磁盘缓存的操作是异步执行的，不会阻塞UI</p>
+<p>好的，接着往下看</p>
+<pre><code>/**
+ * The maximum &quot;total cost&quot; of the in-memory image cache. The cost function is the number of pixels held in memory.
+ */
+@property (assign, nonatomic) NSUInteger maxMemoryCost;
+
+/**
+ * The maximum length of time to keep an image in the cache, in seconds
+ */
+@property (assign, nonatomic) NSInteger maxCacheAge;
+
+/**
+ * The maximum size of the cache, in bytes.
+ */
+@property (assign, nonatomic) NSUInteger maxCacheSize;
+</code></pre><p>通过maxMemoryCost可以设置图片占用内存的最大像素值，默认为0</p>
+<p>通过maxCacheAge可以设置图片最大缓存时间，单位为秒</p>
+<p>打开SDWebImage.m 可以看到如下代码</p>
+<p><code>static const NSInteger kDefaultCacheMaxCacheAge = 60 * 60 * 24 * 7; // 1 week</code></p>
+<p>图片默认的缓存时间是一周</p>
+<p>通过maxCacheSize可以设置磁盘缓存的最大值，单位为位，默认为0</p>
+<p>若不设置maxCacheSize，图片会以maxCacheAge删除缓存，maxCacheAge内有较多图片缓存在磁盘的话，会占用较多的空间，建议设置一个最大值，我们可以通过下面代码设置</p>
+<p><code>[[SDImageCache sharedImageCache] setMaxCacheSize:100*1024*1024]; //设置图片占用磁盘空间最大为100M</code><br>继续查看SDWebImageweb.m文件，在- (id)initWithNamespace:(NSString *)ns方法中，我们发现三个通知</p>
+<pre><code>[[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(clearMemory)
+                                                     name:UIApplicationDidReceiveMemoryWarningNotification
+                                                   object:nil];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(cleanDisk)
+                                                     name:UIApplicationWillTerminateNotification
+                                                   object:nil];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(backgroundCleanDisk)
+                                                     name:UIApplicationDidEnterBackgroundNotification
+                                                   object:nil];            
+</code></pre><p>这三个通知所做的工作分别是：</p>
+<ul>
+<li>收到内存警告的时候删除内存缓存</li>
+<li>应用程序将要终止的时候清除磁盘缓存 </li>
+<li>应用程序退到后台的时候清除磁盘缓存      </li>
+</ul>
+<p>接着查看这三个方法具体做了什么</p>
+<h6 id="app收到内存警告的时候会执行下面方法"><a href="#app收到内存警告的时候会执行下面方法" class="headerlink" title="app收到内存警告的时候会执行下面方法"></a>app收到内存警告的时候会执行下面方法</h6><pre><code>- (void)clearMemory {
+    [self.memCache removeAllObjects];
+} 
+</code></pre><p>memCache是NSCache的实例对象，NSCache是专门用来处理内存的类，使用方式和NSMutableDictionary类似</p>
+<p>通过代码可以看到，app收到内存警告的时候SD会清空所有内存缓存的图片</p>
+<h6 id="应用程序将要终止的时候执行下面方法，核心代码看中文注释部分"><a href="#应用程序将要终止的时候执行下面方法，核心代码看中文注释部分" class="headerlink" title="应用程序将要终止的时候执行下面方法，核心代码看中文注释部分"></a>应用程序将要终止的时候执行下面方法，核心代码看中文注释部分</h6><pre><code>- (void)cleanDisk {
+    [self cleanDiskWithCompletionBlock:nil];
+}
+
+- (void)cleanDiskWithCompletionBlock:(SDWebImageNoParamsBlock)completionBlock {
+    dispatch_async(self.ioQueue, ^{
+        NSURL *diskCacheURL = [NSURL fileURLWithPath:self.diskCachePath isDirectory:YES];
+        NSArray *resourceKeys = @[NSURLIsDirectoryKey, NSURLContentModificationDateKey, NSURLTotalFileAllocatedSizeKey];
+
+        // This enumerator prefetches useful properties for our cache files.
+        NSDirectoryEnumerator *fileEnumerator = [_fileManager enumeratorAtURL:diskCacheURL
+                                                   includingPropertiesForKeys:resourceKeys
+                                                                      options:NSDirectoryEnumerationSkipsHiddenFiles
+                                                                 errorHandler:NULL];
+
+        //获取图片过期时间
+        NSDate *expirationDate = [NSDate dateWithTimeIntervalSinceNow:-self.maxCacheAge];
+        NSMutableDictionary *cacheFiles = [NSMutableDictionary dictionary];
+        NSUInteger currentCacheSize = 0;
+
+        // Enumerate all of the files in the cache directory.  This loop has two purposes:
+        //
+        //  1. Removing files that are older than the expiration date.
+        //  2. Storing file attributes for the size-based cleanup pass.
+        NSMutableArray *urlsToDelete = [[NSMutableArray alloc] init];
+        for (NSURL *fileURL in fileEnumerator) {
+            NSDictionary *resourceValues = [fileURL resourceValuesForKeys:resourceKeys error:NULL];
+
+            // Skip directories.
+            if ([resourceValues[NSURLIsDirectoryKey] boolValue]) {
+                continue;
+            }
+
+            // Remove files that are older than the expiration date;
+            //若图片的修改时间超过过期时间，将图片url放到urlsToDelete数组中，稍后删除
+            NSDate *modificationDate = resourceValues[NSURLContentModificationDateKey];
+            if ([[modificationDate laterDate:expirationDate] isEqualToDate:expirationDate]) {
+                [urlsToDelete addObject:fileURL];
+                continue;
+            }
+            //计算剩余图片所占用的空间
+            // Store a reference to this file and account for its total size.
+            NSNumber *totalAllocatedSize = resourceValues[NSURLTotalFileAllocatedSizeKey];
+            currentCacheSize += [totalAllocatedSize unsignedIntegerValue];
+            [cacheFiles setObject:resourceValues forKey:fileURL];
+        }
+
+        //删除过期的图片
+        for (NSURL *fileURL in urlsToDelete) {
+            [_fileManager removeItemAtURL:fileURL error:nil];
+        }
+
+        // If our remaining disk cache exceeds a configured maximum size, perform a second
+        // size-based cleanup pass.  We delete the oldest files first.
+        //最大缓存值大于0，当前缓存值大于最大占用的缓存值，按照缓存时间，删除最旧的一半的图片
+        if (self.maxCacheSize &gt; 0 &amp;&amp; currentCacheSize &gt; self.maxCacheSize) {
+            // Target half of our maximum cache size for this cleanup pass.
+            const NSUInteger desiredCacheSize = self.maxCacheSize / 2;
+
+            // Sort the remaining cache files by their last modification time (oldest first).
+            NSArray *sortedFiles = [cacheFiles keysSortedByValueWithOptions:NSSortConcurrent
+                                                            usingComparator:^NSComparisonResult(id obj1, id obj2) {
+                                                                return [obj1[NSURLContentModificationDateKey] compare:obj2[NSURLContentModificationDateKey]];
+                                                            }];
+
+            // Delete files until we fall below our desired cache size.
+            for (NSURL *fileURL in sortedFiles) {
+                if ([_fileManager removeItemAtURL:fileURL error:nil]) {
+                    NSDictionary *resourceValues = cacheFiles[fileURL];
+                    NSNumber *totalAllocatedSize = resourceValues[NSURLTotalFileAllocatedSizeKey];
+                    currentCacheSize -= [totalAllocatedSize unsignedIntegerValue];
+
+                    if (currentCacheSize &lt; desiredCacheSize) {
+                        break;
+                    }
+                }
+            }
+        }
+        if (completionBlock) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionBlock();
+            });
+        }
+    });
+}
+</code></pre><h6 id="应用程序退到后台的时候执行下面方法"><a href="#应用程序退到后台的时候执行下面方法" class="headerlink" title="应用程序退到后台的时候执行下面方法"></a>应用程序退到后台的时候执行下面方法</h6><pre><code>- (void)backgroundCleanDisk {
+    UIApplication *application = [UIApplication sharedApplication];
+    __block UIBackgroundTaskIdentifier bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
+        // Clean up any unfinished task business by marking where you
+        // stopped or ending the task outright.
+        [application endBackgroundTask:bgTask];
+        bgTask = UIBackgroundTaskInvalid;
+    }];
+
+    // Start the long-running task and return immediately.
+    [self cleanDiskWithCompletionBlock:^{
+        [application endBackgroundTask:bgTask];
+        bgTask = UIBackgroundTaskInvalid;
+    }];
+} 
+</code></pre><p>删除图片的逻辑与上面一样，不同的是在后台task执行</p>
+<p>通过源码分析，我们知道SD是如何清理缓存的了</p>
+<p><strong>总结</strong><br>1、图片缓存在磁盘的时间默认为1周，通过设置maxCacheAge的值，我们可以按照自己的需求设置图片在磁盘缓存的最长时间<br>2、通过maxMemoryCost，可设置图片占用的最大内存，当收到内存警告的通知的时候，SD会清空图片占用的所有内存<br>3、通过maxCacheSize，可设置图片占用的最大磁盘空间，当程序退到后台或者将要终止的时候，SD会先清理超过最大缓存时间的图片，然后计算缓存图片占用的磁盘空间，若占用的空间大于maxCacheSize，SD会将缓存的url按修改时间倒序，循环删除最旧的图片，直到，磁盘空间小于maxCacheSize/2为止</p>
+<p>通过上面的方法，可保证图片在内存和磁盘占用的空间始终在可控的范围内</p>
+<p>好的，今天就写到这了，若有不对的地方请不吝赐教！                                            </p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/11/13/记Hexo+github搭建个人博客的过程/" itemprop="url">
+                  记Hexo+github搭建个人博客的过程
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-11-13T15:40:25+08:00" content="2015-11-13">
+              2015-11-13
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/11/13/记Hexo+github搭建个人博客的过程/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/13/记Hexo+github搭建个人博客的过程/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="搭建博客前的准备工作"><a href="#搭建博客前的准备工作" class="headerlink" title="搭建博客前的准备工作"></a>搭建博客前的准备工作</h3><p> 1、安装Homebrew</p>
+<p>Homebrew是Mac OSX上的软件包管理工具，能在Mac中方便的安装软件或者卸载软件，在终端执行下面命令安装：</p>
+<pre><code>ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;
+</code></pre><p>安装完成后可以使用下面命令查看版本信息</p>
+<pre><code>npm -v
+</code></pre><p> 2、使用Homebrew安装node</p>
+<p>在终端执行下面命令安装</p>
+<pre><code>brew install node
+</code></pre><p>安装完成后可以使用下面命令查看版本信息</p>
+<pre><code>node -v
+</code></pre><h3 id="开始搭建个人博客"><a href="#开始搭建个人博客" class="headerlink" title="开始搭建个人博客"></a>开始搭建个人博客</h3><p>安装Hexo</p>
+<pre><code>npm install --verbose -g hexo-cli
+</code></pre><p>初始化Hexo<br>进入到相应的文件夹目</p>
+<pre><code>hexo init
+
+npm install
+</code></pre><p>安装完成后可在目录下看到对于目录结构</p>
+<pre><code>.
+├── _config.yml  #站点配置文件
+├── package.json  #应用程序的信息
+├── scaffolds  #模板文件夹，博文是根据模板生成的
+├── source  #资源文件夹
+|   ├── _posts  #生成的博客
+└── themes  #下载的主题
+</code></pre><p>现在我们执行下列命令来发布的本地服务器</p>
+<pre><code>hexo g #生成博客静态文件
+hexo s #启动本地服务器
+</code></pre><p>在浏览器中打开<a href="http://localhost:4000查看默认效果" target="_blank" rel="external">http://localhost:4000查看默认效果</a></p>
+<h3 id="连接github"><a href="#连接github" class="headerlink" title="连接github"></a>连接github</h3><p>建立Repository，建立与你用户名对应的仓库，仓库名必须为【your_user_name.github.io】，固定写法</p>
+<p>配置_config.yml与github建立关联</p>
+<pre><code># Deployment
+## Docs: https://hexo.io/docs/deployment.html
+deploy:
+  type: git
+  repository: git@github.com:FMYang/FMYang.github.io.git
+  branch: master
+</code></pre><p>执行配置命令</p>
+<pre><code>hexo d
+</code></pre><p>大功告成！</p>
+<p>快去使用<span><a href="http://username.github.io/" target="_blank" rel="external">http://username.github.io/</a></span>访问你的个人博客试试吧。</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>1、配置主题</p>
+<p>推荐主题 <a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">NexT传送门</a></p>
+<p>更多主题 <a href="https://hexo.io/themes/" target="_blank" rel="external">hexo.io</a></p>
+<p>2、配置网站访问人数流量</p>
+<p>推荐使用 <a href="http://ibruce.info/2015/04/04/busuanzi/" target="_blank" rel="external">不蒜子</a></p>
+<p>更多配置内容参考下面链接</p>
+<p><a href="http://blog.hjtxxx.com/2015/08/13/Hexo-%E4%B8%80-%EF%BC%9A%E5%9C%A8GitHub%E4%B8%8A%E6%90%AD%E5%BB%BA%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2/" target="_blank" rel="external">http://blog.hjtxxx.com/2015/08/13/Hexo-%E4%B8%80-%EF%BC%9A%E5%9C%A8GitHub%E4%B8%8A%E6%90%AD%E5%BB%BA%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2/</a></p>
+<p><a href="http://www.jianshu.com/p/465830080ea9" target="_blank" rel="external">http://www.jianshu.com/p/465830080ea9</a><br><a href="http://www.tuicool.com/articles/AfQnQjy" target="_blank" rel="external">http://www.tuicool.com/articles/AfQnQjy</a></p>
+<p>感谢上面博客的作者，收益匪浅。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
@@ -346,7 +1226,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

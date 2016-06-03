@@ -41,7 +41,7 @@
 <link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Markdown,接口文档," />
 
 
 
@@ -57,19 +57,34 @@
 
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
+<meta name="description" content="微博接口文档
+[TOC]
+一、读取接口1、获取最新的公共微博URLhttps://api.weibo.com/2/statuses/public_timeline.json
+支持格式JSON
+HTTP请求方式GET
+是否需要登陆是
+请求参数|  参数       | 必选    |  类型及范围   |    说明                                    ||:———">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2016/06/02/hello-world/index.html">
+<meta property="og:title" content="Markdown编写接口文档">
+<meta property="og:url" content="http://yoursite.com/2016/06/02/Markdown编写接口文档/index.html">
 <meta property="og:site_name" content="杨方明个人博客">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
-<meta property="og:updated_time" content="2016-06-02T15:42:10.000Z">
+<meta property="og:description" content="微博接口文档
+[TOC]
+一、读取接口1、获取最新的公共微博URLhttps://api.weibo.com/2/statuses/public_timeline.json
+支持格式JSON
+HTTP请求方式GET
+是否需要登陆是
+请求参数|  参数       | 必选    |  类型及范围   |    说明                                    ||:———">
+<meta property="og:updated_time" content="2016-06-02T10:35:28.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
+<meta name="twitter:title" content="Markdown编写接口文档">
+<meta name="twitter:description" content="微博接口文档
+[TOC]
+一、读取接口1、获取最新的公共微博URLhttps://api.weibo.com/2/statuses/public_timeline.json
+支持格式JSON
+HTTP请求方式GET
+是否需要登陆是
+请求参数|  参数       | 必选    |  类型及范围   |    说明                                    ||:———">
 
 
 
@@ -87,7 +102,7 @@ Quick">
   };
 </script>
 
-  <title> Hello World | 杨方明个人博客 </title>
+  <title> Markdown编写接口文档 | 杨方明个人博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -223,7 +238,7 @@ Quick">
             
             
               
-                Hello World
+                Markdown编写接口文档
               
             
           </h1>
@@ -235,7 +250,7 @@ Quick">
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-02T23:42:10+08:00" content="2016-06-02">
+            <time itemprop="dateCreated" datetime="2016-06-02T16:45:36+08:00" content="2016-06-02">
               2016-06-02
             </time>
           </span>
@@ -246,8 +261,8 @@ Quick">
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/06/02/hello-world/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/02/hello-world/" itemprop="commentsCount"></span>
+                <a href="/2016/06/02/Markdown编写接口文档/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/02/Markdown编写接口文档/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -269,16 +284,69 @@ Quick">
       
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <h1 id="微博接口文档"><a href="#微博接口文档" class="headerlink" title="微博接口文档"></a>微博接口文档</h1><hr>
+<p>[TOC]</p>
+<h3 id="一、读取接口"><a href="#一、读取接口" class="headerlink" title="一、读取接口"></a>一、读取接口</h3><h4 id="1、获取最新的公共微博"><a href="#1、获取最新的公共微博" class="headerlink" title="1、获取最新的公共微博"></a>1、获取最新的公共微博</h4><p>URL<br><a href="https://api.weibo.com/2/statuses/public_timeline.json" target="_blank" rel="external">https://api.weibo.com/2/statuses/public_timeline.json</a></p>
+<p>支持格式<br>JSON</p>
+<p>HTTP请求方式<br>GET</p>
+<p>是否需要登陆<br>是</p>
+<p>请求参数<br>|  参数       | 必选    |  类型及范围   |    说明                                    |<br>|:———–:      | :———–:      |   :———–:       |   :———–:                                |<br>| access_token  | true    |   string     | 采用OAuth授权方式为必填参数，OAuth授权后获得。|<br>| page          | false   |   int        | 单页返回的记录条数，默认为50。                |<br>| count         | false   |   int        | 返回结果的页码，默认为1。                    |</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>类型及范围</th>
+<th>说明                                    </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> access_token</td>
+<td>true</td>
+<td>string</td>
+<td>采用OAuth授权方式为必填参数，OAuth授权后获得。</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>width</td>
+<td>设置layout viewport  的宽度，为一个正整数，或字符串”width-device”</td>
+</tr>
+<tr>
+<td>initial-scale</td>
+<td>设置页面的初始缩放值，为一个数字，可以带小数</td>
+</tr>
+<tr>
+<td>minimum-scale</td>
+<td>允许用户的最小缩放值，为一个数字，可以带小数</td>
+</tr>
+<tr>
+<td>maximum-scale</td>
+<td>允许用户的最大缩放值，为一个数字，可以带小数</td>
+</tr>
+<tr>
+<td>height</td>
+<td>设置layout viewport  的高度，这个属性对我们并不重要，很少使用</td>
+</tr>
+<tr>
+<td>user-scalable</td>
+<td>是否允许用户进行缩放，值为”no”或”yes”, no 代表不允许，yes代表允许</td>
+</tr>
+</tbody>
+</table>
+<table><br><br><tr><br><td>参数</td><br><td>必选</td><br><td>类型及范围</td><br><td>说明</td><br></tr><br><br><tr><br><td>access_token</td><br><td>true</td><br><td>string</td><br><td>采用OAuth授权方式为必填参数，OAuth授权后获得。</td><br></tr><br><br></table>
 
+<p>返回结果<br><code>json示例</code><br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"statuses"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"created_at"</span>: <span class="string">"Tue May 31 17:46:55 +0800 2011"</span>,</span><br><span class="line">            <span class="attr">"id"</span>: <span class="number">11488058246</span>,</span><br><span class="line">            <span class="attr">"text"</span>: <span class="string">"求关注。"</span>，</span><br><span class="line">            <span class="string">"source"</span>: <span class="string">"&lt;a href="</span>http://weibo.com<span class="string">" rel="</span>nofollow<span class="string">"&gt;新浪微博&lt;/a&gt;"</span>,</span><br><span class="line">            <span class="attr">"favorited"</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">"truncated"</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">"in_reply_to_status_id"</span>: <span class="string">""</span>,</span><br><span class="line">            <span class="attr">"in_reply_to_user_id"</span>: <span class="string">""</span>,</span><br><span class="line">            <span class="attr">"in_reply_to_screen_name"</span>: <span class="string">""</span>,</span><br><span class="line">            <span class="attr">"geo"</span>: <span class="literal">null</span>,</span><br><span class="line">            <span class="attr">"mid"</span>: <span class="string">"5612814510546515491"</span>,</span><br><span class="line">            <span class="attr">"reposts_count"</span>: <span class="number">8</span>,</span><br><span class="line">            <span class="attr">"comments_count"</span>: <span class="number">9</span>,</span><br><span class="line">            <span class="attr">"annotations"</span>: [],</span><br><span class="line">            <span class="attr">"user"</span>: &#123;</span><br><span class="line">                <span class="attr">"id"</span>: <span class="number">1404376560</span>,</span><br><span class="line">                <span class="attr">"screen_name"</span>: <span class="string">"zaku"</span>,</span><br><span class="line">                <span class="attr">"name"</span>: <span class="string">"zaku"</span>,</span><br><span class="line">                <span class="attr">"province"</span>: <span class="string">"11"</span>,</span><br><span class="line">                <span class="attr">"city"</span>: <span class="string">"5"</span>,</span><br><span class="line">                <span class="attr">"location"</span>: <span class="string">"北京 朝阳区"</span>,</span><br><span class="line">                <span class="attr">"description"</span>: <span class="string">"人生五十年，乃如梦如幻；有生斯有死，壮士复何憾。"</span>,</span><br><span class="line">                <span class="attr">"url"</span>: <span class="string">"http://blog.sina.com.cn/zaku"</span>,</span><br><span class="line">                <span class="attr">"profile_image_url"</span>: <span class="string">"http://tp1.sinaimg.cn/1404376560/50/0/1"</span>,</span><br><span class="line">                <span class="attr">"domain"</span>: <span class="string">"zaku"</span>,</span><br><span class="line">                <span class="attr">"gender"</span>: <span class="string">"m"</span>,</span><br><span class="line">                <span class="attr">"followers_count"</span>: <span class="number">1204</span>,</span><br><span class="line">                <span class="attr">"friends_count"</span>: <span class="number">447</span>,</span><br><span class="line">                <span class="attr">"statuses_count"</span>: <span class="number">2908</span>,</span><br><span class="line">                <span class="attr">"favourites_count"</span>: <span class="number">0</span>,</span><br><span class="line">                <span class="attr">"created_at"</span>: <span class="string">"Fri Aug 28 00:00:00 +0800 2009"</span>,</span><br><span class="line">                <span class="attr">"following"</span>: <span class="literal">false</span>,</span><br><span class="line">                <span class="attr">"allow_all_act_msg"</span>: <span class="literal">false</span>,</span><br><span class="line">                <span class="attr">"remark"</span>: <span class="string">""</span>,</span><br><span class="line">                <span class="attr">"geo_enabled"</span>: <span class="literal">true</span>,</span><br><span class="line">                <span class="attr">"verified"</span>: <span class="literal">false</span>,</span><br><span class="line">                <span class="attr">"allow_all_comment"</span>: <span class="literal">true</span>,</span><br><span class="line">                <span class="attr">"avatar_large"</span>: <span class="string">"http://tp1.sinaimg.cn/1404376560/180/0/1"</span>,</span><br><span class="line">                <span class="attr">"verified_reason"</span>: <span class="string">""</span>,</span><br><span class="line">                <span class="attr">"follow_me"</span>: <span class="literal">false</span>,</span><br><span class="line">                <span class="attr">"online_status"</span>: <span class="number">0</span>,</span><br><span class="line">                <span class="attr">"bi_followers_count"</span>: <span class="number">215</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        ..</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"previous_cursor"</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">"next_cursor"</span>: <span class="number">11488013766</span>,</span><br><span class="line">    <span class="attr">"total_number"</span>: <span class="number">81655</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="2、获取当前登录用户及其所关注用户的最新微博"><a href="#2、获取当前登录用户及其所关注用户的最新微博" class="headerlink" title="2、获取当前登录用户及其所关注用户的最新微博"></a>2、获取当前登录用户及其所关注用户的最新微博</h4>
       
     </div>
 
@@ -290,18 +358,30 @@ Quick">
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Markdown/" rel="tag">#Markdown</a>
+          
+            <a href="/tags/接口文档/" rel="tag">#接口文档</a>
+          
+        </div>
+      
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/06/02/Markdown编写接口文档/" rel="next" title="Markdown编写接口文档">
-                <i class="fa fa-chevron-left"></i> Markdown编写接口文档
+              <a href="/2016/04/20/安装cocoapods/" rel="next" title="安装cocoapods">
+                <i class="fa fa-chevron-left"></i> 安装cocoapods
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/06/02/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -327,8 +407,8 @@ Quick">
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/06/02/hello-world/"
-           data-title="Hello World" data-url="http://yoursite.com/2016/06/02/hello-world/">
+      <div class="ds-thread" data-thread-key="2016/06/02/Markdown编写接口文档/"
+           data-title="Markdown编写接口文档" data-url="http://yoursite.com/2016/06/02/Markdown编写接口文档/">
       </div>
     
   </div>
@@ -424,7 +504,7 @@ Quick">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#微博接口文档"><span class="nav-number">1.</span> <span class="nav-text">微博接口文档</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、读取接口"><span class="nav-number">1.0.1.</span> <span class="nav-text">一、读取接口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、获取最新的公共微博"><span class="nav-number">1.0.1.1.</span> <span class="nav-text">1、获取最新的公共微博</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、获取当前登录用户及其所关注用户的最新微博"><span class="nav-number">1.0.1.2.</span> <span class="nav-text">2、获取当前登录用户及其所关注用户的最新微博</span></a></li></ol></li></ol></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
