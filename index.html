@@ -222,6 +222,115 @@
             
               
                 
+                <a class="post-title-link" href="/2016/06/20/iOS设置电池栏样式/" itemprop="url">
+                  iOS设置电池栏样式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-20T18:08:24+08:00" content="2016-06-20">
+              2016-06-20
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/20/iOS设置电池栏样式/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/20/iOS设置电池栏样式/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>由于工作项目使用的导航栏是自定义的，所以下文所述的设置方法，可能对使用原生导航栏的同学无效，先写自定义导航栏的情况下的设置，至于使用原生导航栏的情况，后面再写。</p>
+<p>首先在Info.plist文件中加入View controller-based status bar appearance这个key，设置为NO</p>
+<p>经测试，总结下这个key的用法</p>
+<p>1、设置为NO的时候，默认会隐藏导航栏，需要在APPDelegate里面加上如下代码显示并设置默认电池栏风格</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[[UIApplication sharedApplication] setStatusBarHidden:NO];</span><br><span class="line">[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];</span><br></pre></td></tr></table></figure>
+<p>在需要改变电池样式的地方使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//设置样式</span><br><span class="line">   [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];</span><br><span class="line"></span><br><span class="line">   //隐藏电池栏</span><br><span class="line">   [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];</span><br></pre></td></tr></table></figure>
+<p>设置电池栏的样式，重写preferredStatusBarStyle方法设置电池栏样式无效  </p>
+<p>2、为YES时，使用setStatusBarStyle方法设置电池栏样式无效</p>
+<p>只能通过重写preferredStatusBarStyle方法设置样式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (UIStatusBarStyle)preferredStatusBarStyle</span><br><span class="line">&#123;</span><br><span class="line">    return UIStatusBarStyleDefault;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>iOS9之后，Apple推荐使用第二种方式，头文件描述如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle animated:(BOOL)animated  </span><br><span class="line">NS_DEPRECATED_IOS(2_0, 9_0, &quot;Use -[UIViewController preferredStatusBarStyle]&quot;) __TVOS_PROHIBITED;</span><br></pre></td></tr></table></figure>
+<p>全文完</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/06/02/Markdown编写接口文档/" itemprop="url">
                   Markdown编写接口文档
                 </a>
@@ -1092,7 +1201,7 @@ deploy:
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -41,7 +41,7 @@
 <link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="hexo," />
+  <meta name="keywords" content="ios," />
 
 
 
@@ -57,25 +57,25 @@
 
 
 
-<meta name="description" content="搭建博客前的准备工作 1、安装Homebrew
-Homebrew是Mac OSX上的软件包管理工具，能在Mac中方便的安装软件或者卸载软件，在终端执行下面命令安装：
-ruby -e &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&amp;quot;
-安装完成后可以使用下面命令查看版本">
+<meta name="description" content="由于工作项目使用的导航栏是自定义的，所以下文所述的设置方法，可能对使用原生导航栏的同学无效，先写自定义导航栏的情况下的设置，至于使用原生导航栏的情况，后面再写。
+首先在Info.plist文件中加入View controller-based status bar appearance这个key，设置为NO
+经测试，总结下这个key的用法
+1、设置为NO的时候，默认会隐藏导航栏，需要在APPDele">
 <meta property="og:type" content="article">
-<meta property="og:title" content="记Hexo+github搭建个人博客的过程">
-<meta property="og:url" content="http://yoursite.com/2015/11/13/记Hexo+github搭建个人博客的过程/index.html">
+<meta property="og:title" content="iOS设置电池栏样式">
+<meta property="og:url" content="http://yoursite.com/2016/06/20/iOS设置电池栏样式/index.html">
 <meta property="og:site_name" content="杨方明个人博客">
-<meta property="og:description" content="搭建博客前的准备工作 1、安装Homebrew
-Homebrew是Mac OSX上的软件包管理工具，能在Mac中方便的安装软件或者卸载软件，在终端执行下面命令安装：
-ruby -e &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&amp;quot;
-安装完成后可以使用下面命令查看版本">
-<meta property="og:updated_time" content="2016-06-01T14:39:14.000Z">
+<meta property="og:description" content="由于工作项目使用的导航栏是自定义的，所以下文所述的设置方法，可能对使用原生导航栏的同学无效，先写自定义导航栏的情况下的设置，至于使用原生导航栏的情况，后面再写。
+首先在Info.plist文件中加入View controller-based status bar appearance这个key，设置为NO
+经测试，总结下这个key的用法
+1、设置为NO的时候，默认会隐藏导航栏，需要在APPDele">
+<meta property="og:updated_time" content="2016-06-21T06:25:25.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="记Hexo+github搭建个人博客的过程">
-<meta name="twitter:description" content="搭建博客前的准备工作 1、安装Homebrew
-Homebrew是Mac OSX上的软件包管理工具，能在Mac中方便的安装软件或者卸载软件，在终端执行下面命令安装：
-ruby -e &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&amp;quot;
-安装完成后可以使用下面命令查看版本">
+<meta name="twitter:title" content="iOS设置电池栏样式">
+<meta name="twitter:description" content="由于工作项目使用的导航栏是自定义的，所以下文所述的设置方法，可能对使用原生导航栏的同学无效，先写自定义导航栏的情况下的设置，至于使用原生导航栏的情况，后面再写。
+首先在Info.plist文件中加入View controller-based status bar appearance这个key，设置为NO
+经测试，总结下这个key的用法
+1、设置为NO的时候，默认会隐藏导航栏，需要在APPDele">
 
 
 
@@ -93,7 +93,7 @@ ruby -e &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/instal
   };
 </script>
 
-  <title> 记Hexo+github搭建个人博客的过程 | 杨方明个人博客 </title>
+  <title> iOS设置电池栏样式 | 杨方明个人博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -229,7 +229,7 @@ ruby -e &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/instal
             
             
               
-                记Hexo+github搭建个人博客的过程
+                iOS设置电池栏样式
               
             
           </h1>
@@ -241,38 +241,19 @@ ruby -e &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/instal
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-11-13T15:40:25+08:00" content="2015-11-13">
-              2015-11-13
+            <time itemprop="dateCreated" datetime="2016-06-20T18:08:24+08:00" content="2016-06-20">
+              2016-06-20
             </time>
           </span>
 
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/技术/" itemprop="url" rel="index">
-                    <span itemprop="name">技术</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
           
 
           
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/11/13/记Hexo+github搭建个人博客的过程/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/13/记Hexo+github搭建个人博客的过程/" itemprop="commentsCount"></span>
+                <a href="/2016/06/20/iOS设置电池栏样式/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/20/iOS设置电池栏样式/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -294,55 +275,20 @@ ruby -e &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/instal
       
 
       
-        <h3 id="搭建博客前的准备工作"><a href="#搭建博客前的准备工作" class="headerlink" title="搭建博客前的准备工作"></a>搭建博客前的准备工作</h3><p> 1、安装Homebrew</p>
-<p>Homebrew是Mac OSX上的软件包管理工具，能在Mac中方便的安装软件或者卸载软件，在终端执行下面命令安装：</p>
-<pre><code>ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;
-</code></pre><p>安装完成后可以使用下面命令查看版本信息</p>
-<pre><code>npm -v
-</code></pre><p> 2、使用Homebrew安装node</p>
-<p>在终端执行下面命令安装</p>
-<pre><code>brew install node
-</code></pre><p>安装完成后可以使用下面命令查看版本信息</p>
-<pre><code>node -v
-</code></pre><h3 id="开始搭建个人博客"><a href="#开始搭建个人博客" class="headerlink" title="开始搭建个人博客"></a>开始搭建个人博客</h3><p>安装Hexo</p>
-<pre><code>npm install --verbose -g hexo-cli
-</code></pre><p>初始化Hexo<br>进入到相应的文件夹目</p>
-<pre><code>hexo init
-
-npm install
-</code></pre><p>安装完成后可在目录下看到对于目录结构</p>
-<pre><code>.
-├── _config.yml  #站点配置文件
-├── package.json  #应用程序的信息
-├── scaffolds  #模板文件夹，博文是根据模板生成的
-├── source  #资源文件夹
-|   ├── _posts  #生成的博客
-└── themes  #下载的主题
-</code></pre><p>现在我们执行下列命令来发布的本地服务器</p>
-<pre><code>hexo g #生成博客静态文件
-hexo s #启动本地服务器
-</code></pre><p>在浏览器中打开<a href="http://localhost:4000查看默认效果" target="_blank" rel="external">http://localhost:4000查看默认效果</a></p>
-<h3 id="连接github"><a href="#连接github" class="headerlink" title="连接github"></a>连接github</h3><p>建立Repository，建立与你用户名对应的仓库，仓库名必须为【your_user_name.github.io】，固定写法</p>
-<p>配置_config.yml与github建立关联</p>
-<pre><code># Deployment
-## Docs: https://hexo.io/docs/deployment.html
-deploy:
-  type: git
-  repository: git@github.com:FMYang/FMYang.github.io.git
-  branch: master
-</code></pre><p>执行配置命令</p>
-<pre><code>hexo d
-</code></pre><p>大功告成！</p>
-<p>快去使用<span><a href="http://username.github.io/" target="_blank" rel="external">http://username.github.io/</a></span>访问你的个人博客试试吧。</p>
-<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>1、配置主题</p>
-<p>推荐主题 <a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">NexT传送门</a></p>
-<p>更多主题 <a href="https://hexo.io/themes/" target="_blank" rel="external">hexo.io</a></p>
-<p>2、配置网站访问人数流量</p>
-<p>推荐使用 <a href="http://ibruce.info/2015/04/04/busuanzi/" target="_blank" rel="external">不蒜子</a></p>
-<p>更多配置内容参考下面链接</p>
-<p><a href="http://blog.hjtxxx.com/2015/08/13/Hexo-%E4%B8%80-%EF%BC%9A%E5%9C%A8GitHub%E4%B8%8A%E6%90%AD%E5%BB%BA%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2/" target="_blank" rel="external">http://blog.hjtxxx.com/2015/08/13/Hexo-%E4%B8%80-%EF%BC%9A%E5%9C%A8GitHub%E4%B8%8A%E6%90%AD%E5%BB%BA%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2/</a></p>
-<p><a href="http://www.jianshu.com/p/465830080ea9" target="_blank" rel="external">http://www.jianshu.com/p/465830080ea9</a><br><a href="http://www.tuicool.com/articles/AfQnQjy" target="_blank" rel="external">http://www.tuicool.com/articles/AfQnQjy</a></p>
-<p>感谢上面博客的作者，收益匪浅。</p>
+        <p>由于工作项目使用的导航栏是自定义的，所以下文所述的设置方法，可能对使用原生导航栏的同学无效，先写自定义导航栏的情况下的设置，至于使用原生导航栏的情况，后面再写。</p>
+<p>首先在Info.plist文件中加入View controller-based status bar appearance这个key，设置为NO</p>
+<p>经测试，总结下这个key的用法</p>
+<p>1、设置为NO的时候，默认会隐藏导航栏，需要在APPDelegate里面加上如下代码显示并设置默认电池栏风格</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[[UIApplication sharedApplication] setStatusBarHidden:NO];</span><br><span class="line">[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];</span><br></pre></td></tr></table></figure>
+<p>在需要改变电池样式的地方使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//设置样式</span><br><span class="line">   [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];</span><br><span class="line"></span><br><span class="line">   //隐藏电池栏</span><br><span class="line">   [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];</span><br></pre></td></tr></table></figure>
+<p>设置电池栏的样式，重写preferredStatusBarStyle方法设置电池栏样式无效  </p>
+<p>2、为YES时，使用setStatusBarStyle方法设置电池栏样式无效</p>
+<p>只能通过重写preferredStatusBarStyle方法设置样式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (UIStatusBarStyle)preferredStatusBarStyle</span><br><span class="line">&#123;</span><br><span class="line">    return UIStatusBarStyleDefault;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>iOS9之后，Apple推荐使用第二种方式，头文件描述如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle animated:(BOOL)animated  </span><br><span class="line">NS_DEPRECATED_IOS(2_0, 9_0, &quot;Use -[UIViewController preferredStatusBarStyle]&quot;) __TVOS_PROHIBITED;</span><br></pre></td></tr></table></figure>
+<p>全文完</p>
 
       
     </div>
@@ -357,7 +303,7 @@ deploy:
       
         <div class="post-tags">
           
-            <a href="/tags/hexo/" rel="tag">#hexo</a>
+            <a href="/tags/ios/" rel="tag">#ios</a>
           
         </div>
       
@@ -366,13 +312,13 @@ deploy:
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/06/02/Markdown编写接口文档/" rel="next" title="Markdown编写接口文档">
+                <i class="fa fa-chevron-left"></i> Markdown编写接口文档
+              </a>
+            
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/04/05/SDWebImage源码学习-清理缓存机制/" rel="prev" title="SDWebImage源码学习-缓存清理机制">
-                SDWebImage源码学习-缓存清理机制 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -398,8 +344,8 @@ deploy:
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/11/13/记Hexo+github搭建个人博客的过程/"
-           data-title="记Hexo+github搭建个人博客的过程" data-url="http://yoursite.com/2015/11/13/记Hexo+github搭建个人博客的过程/">
+      <div class="ds-thread" data-thread-key="2016/06/20/iOS设置电池栏样式/"
+           data-title="iOS设置电池栏样式" data-url="http://yoursite.com/2016/06/20/iOS设置电池栏样式/">
       </div>
     
   </div>
@@ -495,7 +441,7 @@ deploy:
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#搭建博客前的准备工作"><span class="nav-number">1.</span> <span class="nav-text">搭建博客前的准备工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开始搭建个人博客"><span class="nav-number">2.</span> <span class="nav-text">开始搭建个人博客</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#连接github"><span class="nav-number">3.</span> <span class="nav-text">连接github</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">4.</span> <span class="nav-text">配置</span></a></li></ol></div>
+              <p class="post-toc-empty">此文章未包含目录</p>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
