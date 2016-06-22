@@ -57,28 +57,25 @@
 
 
 
-<meta name="description" content="前段时间群里有人问sd缓存的图片需要手动清除？
-这类问题反映了一个普遍现象：我们在项目开发的时候，使用一些第三方框架，往往只是会使用，却很少去看源码（知其然，不知其所以然）。当然，导致这种现象的原因很多：项目开发时间紧、看不懂、懒等等因素
-但想要提高技术水平，阅读优秀的源码其实是很有必要也很高效的
-好的，扯了一堆废话，现在打开SD源码，看看它是如何清理缓存的
-我们打开SDImageCache.h头">
+<meta name="description" content="首先安利一波SDWebImage，SDWebImage是一个异步加载图片的框架，以UIImageView分类的方式实现，深受开发者喜欢，github上排行第一的图片框架，如果你还没用过，赶紧试试看吧~
+使用之前不妨先了解下SDImageCache缓存清理策略现在打开SDImageCache.h头文件，从类名可以看出缓存是在这个类处理的
+接口声明上方有这么段注释    /**
+* SDImageCa">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SDWebImage源码学习-缓存清理机制">
 <meta property="og:url" content="http://yoursite.com/2016/04/05/SDWebImage源码学习-清理缓存机制/index.html">
 <meta property="og:site_name" content="杨方明个人博客">
-<meta property="og:description" content="前段时间群里有人问sd缓存的图片需要手动清除？
-这类问题反映了一个普遍现象：我们在项目开发的时候，使用一些第三方框架，往往只是会使用，却很少去看源码（知其然，不知其所以然）。当然，导致这种现象的原因很多：项目开发时间紧、看不懂、懒等等因素
-但想要提高技术水平，阅读优秀的源码其实是很有必要也很高效的
-好的，扯了一堆废话，现在打开SD源码，看看它是如何清理缓存的
-我们打开SDImageCache.h头">
-<meta property="og:updated_time" content="2016-04-12T16:29:10.000Z">
+<meta property="og:description" content="首先安利一波SDWebImage，SDWebImage是一个异步加载图片的框架，以UIImageView分类的方式实现，深受开发者喜欢，github上排行第一的图片框架，如果你还没用过，赶紧试试看吧~
+使用之前不妨先了解下SDImageCache缓存清理策略现在打开SDImageCache.h头文件，从类名可以看出缓存是在这个类处理的
+接口声明上方有这么段注释    /**
+* SDImageCa">
+<meta property="og:updated_time" content="2016-06-22T10:15:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SDWebImage源码学习-缓存清理机制">
-<meta name="twitter:description" content="前段时间群里有人问sd缓存的图片需要手动清除？
-这类问题反映了一个普遍现象：我们在项目开发的时候，使用一些第三方框架，往往只是会使用，却很少去看源码（知其然，不知其所以然）。当然，导致这种现象的原因很多：项目开发时间紧、看不懂、懒等等因素
-但想要提高技术水平，阅读优秀的源码其实是很有必要也很高效的
-好的，扯了一堆废话，现在打开SD源码，看看它是如何清理缓存的
-我们打开SDImageCache.h头">
+<meta name="twitter:description" content="首先安利一波SDWebImage，SDWebImage是一个异步加载图片的框架，以UIImageView分类的方式实现，深受开发者喜欢，github上排行第一的图片框架，如果你还没用过，赶紧试试看吧~
+使用之前不妨先了解下SDImageCache缓存清理策略现在打开SDImageCache.h头文件，从类名可以看出缓存是在这个类处理的
+接口声明上方有这么段注释    /**
+* SDImageCa">
 
 
 
@@ -297,11 +294,8 @@
       
 
       
-        <p>前段时间群里有人问sd缓存的图片需要手动清除？</p>
-<p>这类问题反映了一个普遍现象：我们在项目开发的时候，使用一些第三方框架，往往只是会使用，却很少去看源码（知其然，不知其所以然）。当然，导致这种现象的原因很多：项目开发时间紧、看不懂、懒等等因素</p>
-<p><strong>但想要提高技术水平，阅读优秀的源码其实是很有必要也很高效的</strong></p>
-<p>好的，扯了一堆废话，现在打开SD源码，看看它是如何清理缓存的</p>
-<p>我们打开SDImageCache.h头文件，从类名可以看出缓存是在这个类处理的</p>
+        <p>首先安利一波SDWebImage，SDWebImage是一个异步加载图片的框架，以UIImageView分类的方式实现，深受开发者喜欢，github上排行第一的图片框架，如果你还没用过，赶紧试试看吧~</p>
+<p>使用之前不妨先了解下SDImageCache缓存清理策略<br>现在打开SDImageCache.h头文件，从类名可以看出缓存是在这个类处理的</p>
 <p>接口声明上方有这么段注释<br>    /**</p>
 <pre><code>* SDImageCache maintains a memory cache and an optional disk cache. Disk cache write operations are performed
 * asynchronous so it doesn’t add unnecessary latency to the UI.
