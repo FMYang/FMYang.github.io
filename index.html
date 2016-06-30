@@ -222,6 +222,149 @@
             
               
                 
+                <a class="post-title-link" href="/2016/06/30/git分支开发常用命令/" itemprop="url">
+                  git分支开发常用命令
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-30T14:58:12+08:00" content="2016-06-30">
+              2016-06-30
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/30/git分支开发常用命令/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/30/git分支开发常用命令/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="git分支开发常用命令"><a href="#git分支开发常用命令" class="headerlink" title="git分支开发常用命令"></a>git分支开发常用命令</h1><h3 id="查看分支"><a href="#查看分支" class="headerlink" title="查看分支"></a>查看分支</h3><blockquote>
+<p><code>git branch</code>　//查看所有本地分支<br><code>git branch -r</code>　//查看所有远程分支<br><code>git branch -a</code>  　//查看所有分支<br><code>git show 分支名</code>　//查看分支信息</p>
+</blockquote>
+<h3 id="创建分支"><a href="#创建分支" class="headerlink" title="创建分支"></a>创建分支</h3><blockquote>
+<p><code>git branch 分支名</code></p>
+</blockquote>
+<h3 id="切换分支"><a href="#切换分支" class="headerlink" title="切换分支"></a>切换分支</h3><blockquote>
+<p>切换分支前先提交本地变更到暂存区<br><code>git checkout 分支名</code></p>
+</blockquote>
+<h3 id="创建并切换分支"><a href="#创建并切换分支" class="headerlink" title="创建并切换分支"></a>创建并切换分支</h3><blockquote>
+<p>上面两步可以合并为一行<br><code>git checkout -b 分支名</code></p>
+</blockquote>
+<p>注意：这里创建的是本地分支<br>如果多人开发，需要把本地分支提交到远程服务器</p>
+<h3 id="创建跟踪（tracking-branch）分支"><a href="#创建跟踪（tracking-branch）分支" class="headerlink" title="创建跟踪（tracking branch）分支"></a>创建跟踪（tracking branch）分支</h3><blockquote>
+<p><code>git checkout -b 分支名</code></p>
+</blockquote>
+<h3 id="同步远程分支的代码到本地"><a href="#同步远程分支的代码到本地" class="headerlink" title="同步远程分支的代码到本地"></a>同步远程分支的代码到本地</h3><blockquote>
+<p><code>git fetch</code> //同步所有的远程分支<br><code>git fetch 分支名</code> //同步单个分支的代码</p>
+</blockquote>
+<h3 id="提交本地的变更到远程仓库"><a href="#提交本地的变更到远程仓库" class="headerlink" title="提交本地的变更到远程仓库"></a>提交本地的变更到远程仓库</h3><blockquote>
+<p><code>git pull 远程仓库 分支名</code> //先合并远程分支的代码到本地，如果有冲突先解决冲突，pull可以理解为将fetch、merge合并为一句执行</p>
+<p><code>git push 远程仓库 分支名</code> //提交本地的变更到远程分支</p>
+</blockquote>
+<h3 id="删除本地分支"><a href="#删除本地分支" class="headerlink" title="删除本地分支"></a>删除本地分支</h3><blockquote>
+<p>删除本地分支前先提交变更到暂存区<br><code>git branch -d 分支名</code></p>
+<p>如果删除失败，可使用-D强制删除<br><code>git branch -D 分支名</code></p>
+</blockquote>
+<h3 id="删除远程分支"><a href="#删除远程分支" class="headerlink" title="删除远程分支"></a>删除远程分支</h3><blockquote>
+<p>方法一：<br><code>git push 远程仓库 --delete 分支名</code></p>
+</blockquote>
+<h3 id="删除远程不存在的分支"><a href="#删除远程不存在的分支" class="headerlink" title="删除远程不存在的分支"></a>删除远程不存在的分支</h3><blockquote>
+<p>多人协作的时候，有人删除了一个远程分支，其他人还看得到<br>这是时候使用–delete删除会提示以下错误信息<br>error: unable to delete ‘test’: remote ref does not exist<br>error: failed to push some refs to ‘git@192.168.1.253:UrunNews.git’<br>可使用下面命令解决<br><code>git fetch</code> -p 远程仓库</p>
+</blockquote>
+<h3 id="合并分支"><a href="#合并分支" class="headerlink" title="合并分支"></a>合并分支</h3><blockquote>
+<p>例如现有master和develop两个分支，需要合并develop分支的代码到master</p>
+<p>先查看当前分支是否为master分支，如果不是，使用checkout命令切换到master分支,<br><code>git checkout master</code><br><code>git merge develop</code> //直接合并不生成合并记录<br><code>git merge --no-ff -m &#39;merge develop&#39; develop</code> //合并的时候生成合并记录，no fast forward</p>
+</blockquote>
+<p>使用–no-ff</p>
+<blockquote>
+<p>每次合并我们都应该产生一个合并记录的节点，便于版本管理，我们应该使用–no-ff来合并分支</p>
+</blockquote>
+<h3 id="暂存stash"><a href="#暂存stash" class="headerlink" title="暂存stash"></a>暂存stash</h3><blockquote>
+<p>场景一、你正在develop分支上开发一些新功能，这时候你的boss让你马上去修复一些线上（master分支）bug，这时候你需要checkout到master分支，并创建一个bugfix分支</p>
+<p>场景二、你正在develop分支上开发一些新功能，这时候测试小伙伴过来告诉你上次装的build版本出了一些bug，需要你立即修复一下出个新的build版本<br>，这时你需要在develop上创建一个新的bugfix分支，修复build版本的bug</p>
+<p>面对以上两种场景，需要保护工作现场，改完bug后回来接着干活，这时候<code>stash</code>指令派上用场了</p>
+<p>切换分支之前执行<br><code>git stash</code> //保护工作现场</p>
+<p>开发完成之后切换回develop分支接着开发，执行<br><code>git stash pop</code> //回到工作现场</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/06/20/iOS设置电池栏样式/" itemprop="url">
                   iOS设置电池栏样式
                 </a>
@@ -1198,7 +1341,7 @@ deploy:
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1215,7 +1358,7 @@ deploy:
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
