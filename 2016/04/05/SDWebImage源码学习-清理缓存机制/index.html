@@ -69,7 +69,7 @@
 使用之前不妨先了解下SDImageCache缓存清理策略现在打开SDImageCache.h头文件，从类名可以看出缓存是在这个类处理的
 接口声明上方有这么段注释    /**
 * SDImageCa">
-<meta property="og:updated_time" content="2016-06-30T07:01:06.000Z">
+<meta property="og:updated_time" content="2016-07-19T07:05:06.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SDWebImage源码学习-缓存清理机制">
 <meta name="twitter:description" content="首先安利一波SDWebImage，SDWebImage是一个异步加载图片的框架，以UIImageView分类的方式实现，深受开发者喜欢，github上排行第一的图片框架，如果你还没用过，赶紧试试看吧~
@@ -324,137 +324,16 @@
 <p>通过maxCacheSize可以设置磁盘缓存的最大值，单位为位，默认为0</p>
 <p>若不设置maxCacheSize，图片会以maxCacheAge删除缓存，maxCacheAge内有较多图片缓存在磁盘的话，会占用较多的空间，建议设置一个最大值，我们可以通过下面代码设置</p>
 <p><code>[[SDImageCache sharedImageCache] setMaxCacheSize:100*1024*1024]; //设置图片占用磁盘空间最大为100M</code><br>继续查看SDWebImageweb.m文件，在- (id)initWithNamespace:(NSString *)ns方法中，我们发现三个通知</p>
-<pre><code>[[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(clearMemory)
-                                                     name:UIApplicationDidReceiveMemoryWarningNotification
-                                                   object:nil];
-
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(cleanDisk)
-                                                     name:UIApplicationWillTerminateNotification
-                                                   object:nil];
-
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(backgroundCleanDisk)
-                                                     name:UIApplicationDidEnterBackgroundNotification
-                                                   object:nil];            
-</code></pre><p>这三个通知所做的工作分别是：</p>
-<ul>
-<li>收到内存警告的时候删除内存缓存</li>
-<li>应用程序将要终止的时候清除磁盘缓存 </li>
-<li>应用程序退到后台的时候清除磁盘缓存      </li>
-</ul>
-<p>接着查看这三个方法具体做了什么</p>
-<h6 id="app收到内存警告的时候会执行下面方法"><a href="#app收到内存警告的时候会执行下面方法" class="headerlink" title="app收到内存警告的时候会执行下面方法"></a>app收到内存警告的时候会执行下面方法</h6><pre><code>- (void)clearMemory {
-    [self.memCache removeAllObjects];
-} 
-</code></pre><p>memCache是NSCache的实例对象，NSCache是专门用来处理内存的类，使用方式和NSMutableDictionary类似</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">NSNotificationCenter</span> defaultCenter] addObserver:<span class="keyword">self</span></span><br><span class="line">                                         selector:<span class="keyword">@selector</span>(clearMemory)</span><br><span class="line">                                             name:<span class="built_in">UIApplicationDidReceiveMemoryWarningNotification</span></span><br><span class="line">                                           object:<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line">[[<span class="built_in">NSNotificationCenter</span> defaultCenter] addObserver:<span class="keyword">self</span></span><br><span class="line">                                         selector:<span class="keyword">@selector</span>(cleanDisk)</span><br><span class="line">                                             name:<span class="built_in">UIApplicationWillTerminateNotification</span></span><br><span class="line">                                           object:<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line">[[<span class="built_in">NSNotificationCenter</span> defaultCenter] addObserver:<span class="keyword">self</span></span><br><span class="line">                                         selector:<span class="keyword">@selector</span>(backgroundCleanDisk)</span><br><span class="line">                                             name:<span class="built_in">UIApplicationDidEnterBackgroundNotification</span></span><br><span class="line">                                           object:<span class="literal">nil</span>];  </span><br><span class="line">```          </span><br><span class="line"></span><br><span class="line">这三个通知所做的工作分别是：</span><br><span class="line">* 收到内存警告的时候删除内存缓存</span><br><span class="line">* 应用程序将要终止的时候清除磁盘缓存 </span><br><span class="line">* 应用程序退到后台的时候清除磁盘缓存      </span><br><span class="line"></span><br><span class="line">接着查看这三个方法具体做了什么</span><br><span class="line"></span><br><span class="line"><span class="meta">###### app收到内存警告的时候会执行下面方法</span></span><br><span class="line"></span><br><span class="line">```objectivec</span><br><span class="line">- (<span class="keyword">void</span>)clearMemory &#123;</span><br><span class="line">    [<span class="keyword">self</span>.memCache removeAllObjects];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>memCache是NSCache的实例对象，NSCache是专门用来处理内存的类，使用方式和NSMutableDictionary类似</p>
 <p>通过代码可以看到，app收到内存警告的时候SD会清空所有内存缓存的图片</p>
-<h6 id="应用程序将要终止的时候执行下面方法，核心代码看中文注释部分"><a href="#应用程序将要终止的时候执行下面方法，核心代码看中文注释部分" class="headerlink" title="应用程序将要终止的时候执行下面方法，核心代码看中文注释部分"></a>应用程序将要终止的时候执行下面方法，核心代码看中文注释部分</h6><pre><code>- (void)cleanDisk {
-    [self cleanDiskWithCompletionBlock:nil];
-}
-
-- (void)cleanDiskWithCompletionBlock:(SDWebImageNoParamsBlock)completionBlock {
-    dispatch_async(self.ioQueue, ^{
-        NSURL *diskCacheURL = [NSURL fileURLWithPath:self.diskCachePath isDirectory:YES];
-        NSArray *resourceKeys = @[NSURLIsDirectoryKey, NSURLContentModificationDateKey, NSURLTotalFileAllocatedSizeKey];
-
-        // This enumerator prefetches useful properties for our cache files.
-        NSDirectoryEnumerator *fileEnumerator = [_fileManager enumeratorAtURL:diskCacheURL
-                                                   includingPropertiesForKeys:resourceKeys
-                                                                      options:NSDirectoryEnumerationSkipsHiddenFiles
-                                                                 errorHandler:NULL];
-
-        //获取图片过期时间
-        NSDate *expirationDate = [NSDate dateWithTimeIntervalSinceNow:-self.maxCacheAge];
-        NSMutableDictionary *cacheFiles = [NSMutableDictionary dictionary];
-        NSUInteger currentCacheSize = 0;
-
-        // Enumerate all of the files in the cache directory.  This loop has two purposes:
-        //
-        //  1. Removing files that are older than the expiration date.
-        //  2. Storing file attributes for the size-based cleanup pass.
-        NSMutableArray *urlsToDelete = [[NSMutableArray alloc] init];
-        for (NSURL *fileURL in fileEnumerator) {
-            NSDictionary *resourceValues = [fileURL resourceValuesForKeys:resourceKeys error:NULL];
-
-            // Skip directories.
-            if ([resourceValues[NSURLIsDirectoryKey] boolValue]) {
-                continue;
-            }
-
-            // Remove files that are older than the expiration date;
-            //若图片的修改时间超过过期时间，将图片url放到urlsToDelete数组中，稍后删除
-            NSDate *modificationDate = resourceValues[NSURLContentModificationDateKey];
-            if ([[modificationDate laterDate:expirationDate] isEqualToDate:expirationDate]) {
-                [urlsToDelete addObject:fileURL];
-                continue;
-            }
-            //计算剩余图片所占用的空间
-            // Store a reference to this file and account for its total size.
-            NSNumber *totalAllocatedSize = resourceValues[NSURLTotalFileAllocatedSizeKey];
-            currentCacheSize += [totalAllocatedSize unsignedIntegerValue];
-            [cacheFiles setObject:resourceValues forKey:fileURL];
-        }
-
-        //删除过期的图片
-        for (NSURL *fileURL in urlsToDelete) {
-            [_fileManager removeItemAtURL:fileURL error:nil];
-        }
-
-        // If our remaining disk cache exceeds a configured maximum size, perform a second
-        // size-based cleanup pass.  We delete the oldest files first.
-        //最大缓存值大于0，当前缓存值大于最大占用的缓存值，按照缓存时间，删除最旧的一半的图片
-        if (self.maxCacheSize &gt; 0 &amp;&amp; currentCacheSize &gt; self.maxCacheSize) {
-            // Target half of our maximum cache size for this cleanup pass.
-            const NSUInteger desiredCacheSize = self.maxCacheSize / 2;
-
-            // Sort the remaining cache files by their last modification time (oldest first).
-            NSArray *sortedFiles = [cacheFiles keysSortedByValueWithOptions:NSSortConcurrent
-                                                            usingComparator:^NSComparisonResult(id obj1, id obj2) {
-                                                                return [obj1[NSURLContentModificationDateKey] compare:obj2[NSURLContentModificationDateKey]];
-                                                            }];
-
-            // Delete files until we fall below our desired cache size.
-            for (NSURL *fileURL in sortedFiles) {
-                if ([_fileManager removeItemAtURL:fileURL error:nil]) {
-                    NSDictionary *resourceValues = cacheFiles[fileURL];
-                    NSNumber *totalAllocatedSize = resourceValues[NSURLTotalFileAllocatedSizeKey];
-                    currentCacheSize -= [totalAllocatedSize unsignedIntegerValue];
-
-                    if (currentCacheSize &lt; desiredCacheSize) {
-                        break;
-                    }
-                }
-            }
-        }
-        if (completionBlock) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock();
-            });
-        }
-    });
-}
-</code></pre><h6 id="应用程序退到后台的时候执行下面方法"><a href="#应用程序退到后台的时候执行下面方法" class="headerlink" title="应用程序退到后台的时候执行下面方法"></a>应用程序退到后台的时候执行下面方法</h6><pre><code>- (void)backgroundCleanDisk {
-    UIApplication *application = [UIApplication sharedApplication];
-    __block UIBackgroundTaskIdentifier bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
-        // Clean up any unfinished task business by marking where you
-        // stopped or ending the task outright.
-        [application endBackgroundTask:bgTask];
-        bgTask = UIBackgroundTaskInvalid;
-    }];
-
-    // Start the long-running task and return immediately.
-    [self cleanDiskWithCompletionBlock:^{
-        [application endBackgroundTask:bgTask];
-        bgTask = UIBackgroundTaskInvalid;
-    }];
-} 
-</code></pre><p>删除图片的逻辑与上面一样，不同的是在后台task执行</p>
+<h6 id="应用程序将要终止的时候执行下面方法，核心代码看中文注释部分"><a href="#应用程序将要终止的时候执行下面方法，核心代码看中文注释部分" class="headerlink" title="应用程序将要终止的时候执行下面方法，核心代码看中文注释部分"></a>应用程序将要终止的时候执行下面方法，核心代码看中文注释部分</h6><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)cleanDisk &#123;</span><br><span class="line">    [<span class="keyword">self</span> cleanDiskWithCompletionBlock:<span class="literal">nil</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)cleanDiskWithCompletionBlock:(SDWebImageNoParamsBlock)completionBlock &#123;</span><br><span class="line">    <span class="built_in">dispatch_async</span>(<span class="keyword">self</span>.ioQueue, ^&#123;</span><br><span class="line">        <span class="built_in">NSURL</span> *diskCacheURL = [<span class="built_in">NSURL</span> fileURLWithPath:<span class="keyword">self</span>.diskCachePath isDirectory:<span class="literal">YES</span>];</span><br><span class="line">        <span class="built_in">NSArray</span> *resourceKeys = @[<span class="built_in">NSURLIsDirectoryKey</span>, <span class="built_in">NSURLContentModificationDateKey</span>, <span class="built_in">NSURLTotalFileAllocatedSizeKey</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// This enumerator prefetches useful properties for our cache files.</span></span><br><span class="line">        <span class="built_in">NSDirectoryEnumerator</span> *fileEnumerator = [_fileManager enumeratorAtURL:diskCacheURL</span><br><span class="line">                                                   includingPropertiesForKeys:resourceKeys</span><br><span class="line">                                                                      options:<span class="built_in">NSDirectoryEnumerationSkipsHiddenFiles</span></span><br><span class="line">                                                                 errorHandler:<span class="literal">NULL</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取图片过期时间</span></span><br><span class="line">        <span class="built_in">NSDate</span> *expirationDate = [<span class="built_in">NSDate</span> dateWithTimeIntervalSinceNow:-<span class="keyword">self</span>.maxCacheAge];</span><br><span class="line">        <span class="built_in">NSMutableDictionary</span> *cacheFiles = [<span class="built_in">NSMutableDictionary</span> dictionary];</span><br><span class="line">        <span class="built_in">NSUInteger</span> currentCacheSize = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Enumerate all of the files in the cache directory.  This loop has two purposes:</span></span><br><span class="line">        <span class="comment">//</span></span><br><span class="line">        <span class="comment">//  1. Removing files that are older than the expiration date.</span></span><br><span class="line">        <span class="comment">//  2. Storing file attributes for the size-based cleanup pass.</span></span><br><span class="line">        <span class="built_in">NSMutableArray</span> *urlsToDelete = [[<span class="built_in">NSMutableArray</span> alloc] init];</span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">NSURL</span> *fileURL <span class="keyword">in</span> fileEnumerator) &#123;</span><br><span class="line">            <span class="built_in">NSDictionary</span> *resourceValues = [fileURL resourceValuesForKeys:resourceKeys error:<span class="literal">NULL</span>];</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Skip directories.</span></span><br><span class="line">            <span class="keyword">if</span> ([resourceValues[<span class="built_in">NSURLIsDirectoryKey</span>] boolValue]) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Remove files that are older than the expiration date;</span></span><br><span class="line">            <span class="comment">//若图片的修改时间超过过期时间，将图片url放到urlsToDelete数组中，稍后删除</span></span><br><span class="line">            <span class="built_in">NSDate</span> *modificationDate = resourceValues[<span class="built_in">NSURLContentModificationDateKey</span>];</span><br><span class="line">            <span class="keyword">if</span> ([[modificationDate laterDate:expirationDate] isEqualToDate:expirationDate]) &#123;</span><br><span class="line">                [urlsToDelete addObject:fileURL];</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//计算剩余图片所占用的空间</span></span><br><span class="line">            <span class="comment">// Store a reference to this file and account for its total size.</span></span><br><span class="line">            <span class="built_in">NSNumber</span> *totalAllocatedSize = resourceValues[<span class="built_in">NSURLTotalFileAllocatedSizeKey</span>];</span><br><span class="line">            currentCacheSize += [totalAllocatedSize unsignedIntegerValue];</span><br><span class="line">            [cacheFiles setObject:resourceValues forKey:fileURL];</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//删除过期的图片</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">NSURL</span> *fileURL <span class="keyword">in</span> urlsToDelete) &#123;</span><br><span class="line">            [_fileManager removeItemAtURL:fileURL error:<span class="literal">nil</span>];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// If our remaining disk cache exceeds a configured maximum size, perform a second</span></span><br><span class="line">        <span class="comment">// size-based cleanup pass.  We delete the oldest files first.</span></span><br><span class="line">        <span class="comment">//最大缓存值大于0，当前缓存值大于最大占用的缓存值，按照缓存时间，删除最旧的一半的图片</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">self</span>.maxCacheSize &gt; <span class="number">0</span> &amp;&amp; currentCacheSize &gt; <span class="keyword">self</span>.maxCacheSize) &#123;</span><br><span class="line">            <span class="comment">// Target half of our maximum cache size for this cleanup pass.</span></span><br><span class="line">            <span class="keyword">const</span> <span class="built_in">NSUInteger</span> desiredCacheSize = <span class="keyword">self</span>.maxCacheSize / <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Sort the remaining cache files by their last modification time (oldest first).</span></span><br><span class="line">            <span class="built_in">NSArray</span> *sortedFiles = [cacheFiles keysSortedByValueWithOptions:<span class="built_in">NSSortConcurrent</span></span><br><span class="line">                                                            usingComparator:^<span class="built_in">NSComparisonResult</span>(<span class="keyword">id</span> obj1, <span class="keyword">id</span> obj2) &#123;</span><br><span class="line">                                                                <span class="keyword">return</span> [obj1[<span class="built_in">NSURLContentModificationDateKey</span>] compare:obj2[<span class="built_in">NSURLContentModificationDateKey</span>]];</span><br><span class="line">                                                            &#125;];</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Delete files until we fall below our desired cache size.</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="built_in">NSURL</span> *fileURL <span class="keyword">in</span> sortedFiles) &#123;</span><br><span class="line">                <span class="keyword">if</span> ([_fileManager removeItemAtURL:fileURL error:<span class="literal">nil</span>]) &#123;</span><br><span class="line">                    <span class="built_in">NSDictionary</span> *resourceValues = cacheFiles[fileURL];</span><br><span class="line">                    <span class="built_in">NSNumber</span> *totalAllocatedSize = resourceValues[<span class="built_in">NSURLTotalFileAllocatedSizeKey</span>];</span><br><span class="line">                    currentCacheSize -= [totalAllocatedSize unsignedIntegerValue];</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span> (currentCacheSize &lt; desiredCacheSize) &#123;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (completionBlock) &#123;</span><br><span class="line">            <span class="built_in">dispatch_async</span>(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">                completionBlock();</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="应用程序退到后台的时候执行下面方法"><a href="#应用程序退到后台的时候执行下面方法" class="headerlink" title="应用程序退到后台的时候执行下面方法"></a>应用程序退到后台的时候执行下面方法</h6><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)backgroundCleanDisk &#123;</span><br><span class="line">    <span class="built_in">UIApplication</span> *application = [<span class="built_in">UIApplication</span> sharedApplication];</span><br><span class="line">    __block <span class="built_in">UIBackgroundTaskIdentifier</span> bgTask = [application beginBackgroundTaskWithExpirationHandler:^&#123;</span><br><span class="line">        <span class="comment">// Clean up any unfinished task business by marking where you</span></span><br><span class="line">        <span class="comment">// stopped or ending the task outright.</span></span><br><span class="line">        [application endBackgroundTask:bgTask];</span><br><span class="line">        bgTask = <span class="built_in">UIBackgroundTaskInvalid</span>;</span><br><span class="line">    &#125;];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Start the long-running task and return immediately.</span></span><br><span class="line">    [<span class="keyword">self</span> cleanDiskWithCompletionBlock:^&#123;</span><br><span class="line">        [application endBackgroundTask:bgTask];</span><br><span class="line">        bgTask = <span class="built_in">UIBackgroundTaskInvalid</span>;</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>删除图片的逻辑与上面一样，不同的是在后台task执行</p>
 <p>通过源码分析，我们知道SD是如何清理缓存的了</p>
 <p><strong>总结</strong><br>1、图片缓存在磁盘的时间默认为1周，通过设置maxCacheAge的值，我们可以按照自己的需求设置图片在磁盘缓存的最长时间<br>2、通过maxMemoryCost，可设置图片占用的最大内存，当收到内存警告的通知的时候，SD会清空图片占用的所有内存<br>3、通过maxCacheSize，可设置图片占用的最大磁盘空间，当程序退到后台或者将要终止的时候，SD会先清理超过最大缓存时间的图片，然后计算缓存图片占用的磁盘空间，若占用的空间大于maxCacheSize，SD会将缓存的url按修改时间倒序，循环删除最旧的图片，直到，磁盘空间小于maxCacheSize/2为止</p>
 <p>通过上面的方法，可保证图片在内存和磁盘占用的空间始终在可控的范围内</p>
-<p>好的，今天就写到这了，若有不对的地方请不吝赐教！                                            </p>
 
       
     </div>
@@ -611,7 +490,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#app收到内存警告的时候会执行下面方法"><span class="nav-number">1.</span> <span class="nav-text">app收到内存警告的时候会执行下面方法</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#应用程序将要终止的时候执行下面方法，核心代码看中文注释部分"><span class="nav-number">2.</span> <span class="nav-text">应用程序将要终止的时候执行下面方法，核心代码看中文注释部分</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#应用程序退到后台的时候执行下面方法"><span class="nav-number">3.</span> <span class="nav-text">应用程序退到后台的时候执行下面方法</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#应用程序将要终止的时候执行下面方法，核心代码看中文注释部分"><span class="nav-number">1.</span> <span class="nav-text">应用程序将要终止的时候执行下面方法，核心代码看中文注释部分</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#应用程序退到后台的时候执行下面方法"><span class="nav-number">2.</span> <span class="nav-text">应用程序退到后台的时候执行下面方法</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
