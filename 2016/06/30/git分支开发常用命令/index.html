@@ -83,7 +83,7 @@ git branch 分支名
 
 创建并切换分支
 上面两步可以合并为一行git checkout">
-<meta property="og:updated_time" content="2016-06-30T06:59:12.000Z">
+<meta property="og:updated_time" content="2016-08-30T01:27:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="git分支开发常用命令">
 <meta name="twitter:description" content="git分支开发常用命令查看分支
@@ -309,8 +309,8 @@ git branch 分支名
 <p>上面两步可以合并为一行<br><code>git checkout -b 分支名</code></p>
 </blockquote>
 <p>注意：这里创建的是本地分支<br>如果多人开发，需要把本地分支提交到远程服务器</p>
-<h3 id="创建跟踪（tracking-branch）分支"><a href="#创建跟踪（tracking-branch）分支" class="headerlink" title="创建跟踪（tracking branch）分支"></a>创建跟踪（tracking branch）分支</h3><blockquote>
-<p><code>git checkout -b 分支名</code></p>
+<h3 id="创建远程分支的本地跟踪（tracking-branch）分支"><a href="#创建远程分支的本地跟踪（tracking-branch）分支" class="headerlink" title="创建远程分支的本地跟踪（tracking branch）分支"></a>创建远程分支的本地跟踪（tracking branch）分支</h3><blockquote>
+<p><code>git checkout -b 分支名 远程分支</code></p>
 </blockquote>
 <h3 id="同步远程分支的代码到本地"><a href="#同步远程分支的代码到本地" class="headerlink" title="同步远程分支的代码到本地"></a>同步远程分支的代码到本地</h3><blockquote>
 <p><code>git fetch</code> //同步所有的远程分支<br><code>git fetch 分支名</code> //同步单个分支的代码</p>
@@ -340,9 +340,10 @@ git branch 分支名
 <h3 id="暂存stash"><a href="#暂存stash" class="headerlink" title="暂存stash"></a>暂存stash</h3><blockquote>
 <p>场景一、你正在develop分支上开发一些新功能，这时候你的boss让你马上去修复一些线上（master分支）bug，这时候你需要checkout到master分支，并创建一个bugfix分支</p>
 <p>场景二、你正在develop分支上开发一些新功能，这时候测试小伙伴过来告诉你上次装的build版本出了一些bug，需要你立即修复一下出个新的build版本<br>，这时你需要在develop上创建一个新的bugfix分支，修复build版本的bug</p>
-<p>面对以上两种场景，需要保护工作现场，改完bug后回来接着干活，这时候<code>stash</code>指令派上用场了</p>
+<p>面对以上两种场景，需要保护工作现场，改完bug后回来接着干活，这时候<code>stash</code>指令就派上用场了</p>
 <p>切换分支之前执行<br><code>git stash</code> //保护工作现场</p>
 <p>开发完成之后切换回develop分支接着开发，执行<br><code>git stash pop</code> //回到工作现场</p>
+<p>清空工作现场的变更<br><code>git stash clear</code></p>
 </blockquote>
 
       
@@ -374,6 +375,10 @@ git branch 分支名
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/16/iOS-Jenkins-Gogs-Git自动化打包集成方案/" rel="prev" title="iOS+Jenkins+Gogs+Git自动化打包集成方案">
+                iOS+Jenkins+Gogs+Git自动化打包集成方案 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -445,7 +450,7 @@ git branch 分支名
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -496,7 +501,7 @@ git branch 分支名
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#git分支开发常用命令"><span class="nav-number">1.</span> <span class="nav-text">git分支开发常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看分支"><span class="nav-number">1.0.1.</span> <span class="nav-text">查看分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建分支"><span class="nav-number">1.0.2.</span> <span class="nav-text">创建分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#切换分支"><span class="nav-number">1.0.3.</span> <span class="nav-text">切换分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建并切换分支"><span class="nav-number">1.0.4.</span> <span class="nav-text">创建并切换分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建跟踪（tracking-branch）分支"><span class="nav-number">1.0.5.</span> <span class="nav-text">创建跟踪（tracking branch）分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同步远程分支的代码到本地"><span class="nav-number">1.0.6.</span> <span class="nav-text">同步远程分支的代码到本地</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提交本地的变更到远程仓库"><span class="nav-number">1.0.7.</span> <span class="nav-text">提交本地的变更到远程仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除本地分支"><span class="nav-number">1.0.8.</span> <span class="nav-text">删除本地分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除远程分支"><span class="nav-number">1.0.9.</span> <span class="nav-text">删除远程分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除远程不存在的分支"><span class="nav-number">1.0.10.</span> <span class="nav-text">删除远程不存在的分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#合并分支"><span class="nav-number">1.0.11.</span> <span class="nav-text">合并分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#暂存stash"><span class="nav-number">1.0.12.</span> <span class="nav-text">暂存stash</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#git分支开发常用命令"><span class="nav-number">1.</span> <span class="nav-text">git分支开发常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看分支"><span class="nav-number">1.0.1.</span> <span class="nav-text">查看分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建分支"><span class="nav-number">1.0.2.</span> <span class="nav-text">创建分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#切换分支"><span class="nav-number">1.0.3.</span> <span class="nav-text">切换分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建并切换分支"><span class="nav-number">1.0.4.</span> <span class="nav-text">创建并切换分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建远程分支的本地跟踪（tracking-branch）分支"><span class="nav-number">1.0.5.</span> <span class="nav-text">创建远程分支的本地跟踪（tracking branch）分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同步远程分支的代码到本地"><span class="nav-number">1.0.6.</span> <span class="nav-text">同步远程分支的代码到本地</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提交本地的变更到远程仓库"><span class="nav-number">1.0.7.</span> <span class="nav-text">提交本地的变更到远程仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除本地分支"><span class="nav-number">1.0.8.</span> <span class="nav-text">删除本地分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除远程分支"><span class="nav-number">1.0.9.</span> <span class="nav-text">删除远程分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除远程不存在的分支"><span class="nav-number">1.0.10.</span> <span class="nav-text">删除远程不存在的分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#合并分支"><span class="nav-number">1.0.11.</span> <span class="nav-text">合并分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#暂存stash"><span class="nav-number">1.0.12.</span> <span class="nav-text">暂存stash</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">

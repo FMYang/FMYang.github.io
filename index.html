@@ -222,6 +222,165 @@
             
               
                 
+                <a class="post-title-link" href="/2016/12/16/iOS-Jenkins-Gogs-Git自动化打包集成方案/" itemprop="url">
+                  iOS+Jenkins+Gogs+Git自动化打包集成方案
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-16T17:52:37+08:00" content="2016-12-16">
+              2016-12-16
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/12/16/iOS-Jenkins-Gogs-Git自动化打包集成方案/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/16/iOS-Jenkins-Gogs-Git自动化打包集成方案/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="iOS-Jenkins-Gogs-Git自动化打包集成方案"><a href="#iOS-Jenkins-Gogs-Git自动化打包集成方案" class="headerlink" title="iOS+Jenkins+Gogs+Git自动化打包集成方案"></a>iOS+Jenkins+Gogs+Git自动化打包集成方案</h1><p>##前言<br>放弃手动打包，拥抱自动化</p>
+<h2 id="搭建Jenkins环境"><a href="#搭建Jenkins环境" class="headerlink" title="搭建Jenkins环境"></a>搭建Jenkins环境</h2><p><a href="https://jenkins.io/index.html" target="_blank" rel="external">下载Jenkins.war安装包</a><br><a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank" rel="external">下载JDK</a></p>
+<p>有两个版本：LTS Release、Weekly Release<br>我选择的是LTS Release</p>
+<p>下载完成之后，放到合适的目录，进入目录，执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar jenkins.war</span><br></pre></td></tr></table></figure>
+<p>启动Jenkins，jenkins默认使用8080端口启动，如果启动失败，可使用自定义端口号启动，命令如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar jenkins.war --httpPort=7080</span><br></pre></td></tr></table></figure>
+<h2 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h2><p><strong>SCM API Plugin</strong> 提供API上次插件的工具<br><strong>Keychains and Provisioning Profiles Management</strong> 用于管理钥匙串以及PP文件的插件<br><strong>Git plugin</strong> Git插件<br><strong>Gogs plugin</strong> Gogs插件，用来触发webhooks<br><strong>SSH plugin</strong>  通过ssh协议远程执行shell的插件<br><strong>Email Extension Plugin</strong> 自定义邮件格式插件</p>
+<h2 id="配置Jenkins"><a href="#配置Jenkins" class="headerlink" title="配置Jenkins"></a>配置Jenkins</h2><p><strong>配置证书文件</strong></p>
+<p>Jenkins主界面-&gt;系统管理-&gt;Keychains and Provisioning Profiles Management</p>
+<ul>
+<li>添加钥匙串</li>
+</ul>
+<p>点击选择文件，然后选择自己存放分发证书的钥匙串，一般来说是钥匙串文件保存在</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Users/developer/Library/Keychains/login.keychain</span><br></pre></td></tr></table></figure>
+<p>上传后在Password处输入解锁钥匙串的密码，这个密码是账户的管理员密码</p>
+<p>然后添加Code Signing Identify。这个值一般来说进入自己的钥匙串-&gt;右键需要添加的证书-&gt;显示介绍</p>
+<p>然后把对于的Code Signing Identify的名字复制粘贴出来就可以了</p>
+<ul>
+<li>添加PP证书</li>
+</ul>
+<p>PP文件的地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/Library/MobileDevice/Provisioning Profiles/</span><br></pre></td></tr></table></figure>
+<p>选择对应的PP文件，一般选择团队PP证书（Team_Provisioning_profiles.mobileprovision），然后Upload即可。这里有一点注意的是，最好*.mobileprovision的文件名最好与UUID相同 (不相同会有问题)</p>
+<p>设置完成之后如下图：<br><img src="/media/14818542024793.jpg" alt=""></p>
+<p><strong>配置邮箱</strong><br><strong>配置邮件提醒</strong><br>这里以QQ邮箱为例</p>
+<p>登录管理员邮箱，打开首页-&gt;设置-&gt;账户-&gt;开启POP3/SMTP服务-&gt;发送短信</p>
+<p><img src="/media/14818558798311.jpg" alt=""></p>
+<p>发送短信完成之后点击我已发送，会收到QQ回执的密码，这个密码下面会用到</p>
+<p>打开Jenkins-&gt;系统设置-&gt; Extended E-mail Notification-&gt;打开高级</p>
+<p>设置<br>SMTP server: smtp.qq.com<br>Default user E-mail suffix: @qq.com</p>
+<p>勾选Use SMTP Authentication<br>设置<br>用户名：管理员邮箱名<br>密码：上面QQ回执的密码<br>SMTP端口:465<br>字符集：UTF-8</p>
+<p>设置完成，测试邮件配置<br>勾选Test e-mail recipient，填写邮箱地址，点击Test configuration<br>发送成功会显示：<br><em>Email was successfully sent</em></p>
+<h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h2><p>打开jenkins首页，点击创建-&gt;jenkinsTest-&gt;构建一个自由风格的软件项目-&gt;OK,创建成功</p>
+<h2 id="设置webhooks"><a href="#设置webhooks" class="headerlink" title="设置webhooks"></a>设置webhooks</h2><p>以Gogs为例，webhooks格式如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http(s)://&lt;&lt; jenkins-server &gt;&gt;/gogs-webhook/?job=&lt;&lt; jobname &gt;&gt;</span><br></pre></td></tr></table></figure>
+<p>打开项目Gogs地址-&gt;仓库设置-&gt;管理web钩子<br>设置推送地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://&#123;你的jenkins服务器地址&#125;/gogs-webhook/?job=JenkinsTest</span><br></pre></td></tr></table></figure>
+<p>数据格式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">application/x-www-form-urlencoded</span><br></pre></td></tr></table></figure>
+<p><img src="/media/14818550430496.jpg" alt=""></p>
+<h2 id="配置项目"><a href="#配置项目" class="headerlink" title="配置项目"></a>配置项目</h2><p><strong>1、General</strong></p>
+<p>勾选<strong>丢弃旧的构建</strong><br>设置：<br>最大保留天数2<br>最大构建数5</p>
+<p><strong>2、源码管理</strong><br>设置：<br>Repository URL: <a href="http://{Gogs地址}/{项目名}/jenkinsTest.git" target="_blank" rel="external">http://{Gogs地址}/{项目名}/jenkinsTest.git</a><br>Credentials: gogs账号用户名和密码<br>Branch: */master</p>
+<p><strong>3、构建环境</strong></p>
+<p>选择Keychains and Code Signing Identities，Jenkins会自动选择自之前配置的证书</p>
+<p><img src="/media/14818544377275.jpg" alt=""></p>
+<p><strong>4、构建</strong></p>
+<p>选择Execute shell构建，构建脚本如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line"># 注意：shell变量和等号之间不能有空格</span><br><span class="line"># exit 0 成功</span><br><span class="line"># exit 1（非0的返回状态码） 失败</span><br><span class="line"></span><br><span class="line"># 获取Info.plist文件路径</span><br><span class="line">Info_plist_dir=&quot;$&#123;WORKSPACE&#125;/$&#123;JOB_NAME&#125;/Info.plist&quot;</span><br><span class="line"></span><br><span class="line"># 获取CI.plist文件路径</span><br><span class="line">CI_plist_dir=&quot;$&#123;WORKSPACE&#125;/$&#123;JOB_NAME&#125;/CI.plist&quot;</span><br><span class="line"></span><br><span class="line"># 获取CI.plist文件打包环境</span><br><span class="line">IS_Debug=$(/usr/libexec/PlistBuddy -c &quot;Print :IS_DEBUG_ARCHIVE&quot; $&#123;CI_plist_dir&#125;)</span><br><span class="line"></span><br><span class="line"># 获取CI.plist文件build和release版本号</span><br><span class="line">IS_Need_archive=$(/usr/libexec/PlistBuddy -c &quot;Print :IS_NEED_ARCHIVE&quot; $CI_plist_dir)</span><br><span class="line"></span><br><span class="line">if [[ ! -n &quot;$IS_Debug&quot; || ! -n &quot;$IS_Need_archive&quot; ]]; then</span><br><span class="line"></span><br><span class="line">    echo &quot;打包环境设置不完整&quot;</span><br><span class="line">    exit 1</span><br><span class="line">    </span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">if [[ &quot;$IS_Need_archive&quot; = false ]]; then</span><br><span class="line"></span><br><span class="line">    echo &quot;不需要打包&quot;</span><br><span class="line">    exit 1</span><br><span class="line">    </span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"># 获取Info.plist文件version和build版本号 CFBundleShortVersionString CFBundleVersion</span><br><span class="line">bundle_version=$(/usr/libexec/PlistBuddy -c &quot;Print :CFBundleShortVersionString&quot; $&#123;Info_plist_dir&#125;)</span><br><span class="line">bundle_build_version=$(/usr/libexec/PlistBuddy -c &quot;Print :CFBundleVersion&quot; $&#123;Info_plist_dir&#125;)</span><br><span class="line"></span><br><span class="line">echo &quot;xcode文件version版本号: $bundle_version&quot;</span><br><span class="line">echo &quot;xcode文件build版本号: $buidle_build_version&quot;</span><br><span class="line"></span><br><span class="line"># 设置xcarchive导出路径</span><br><span class="line">debug_xcarchive_out_path=&quot;/Users/rurn/DailyBuild/测试工程/测试包/xcarchive/$&#123;JOB_NAME&#125;_v$&#123;bundle_build_version&#125;_$(date +%F)_alpha.xcarchive&quot;</span><br><span class="line">release_xcarchive_out_path=&quot;/Users/rurn/DailyBuild/测试工程/正式包/xcarchive/$&#123;JOB_NAME&#125;_v$&#123;bundle_version&#125;_$(date +%F)_release.xcarchive&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 设置ipa导出路径</span><br><span class="line">debug_ipa_out_path=&quot;/Users/rurn/DailyBuild/测试工程/测试包/ipa/$&#123;JOB_NAME&#125;_v$&#123;bundle_build_version&#125;_$(date +%F)_alpha.ipa&quot;</span><br><span class="line">release_ipa_out_path=&quot;/Users/rurn/DailyBuild/测试工程/正式包/ipa/$&#123;JOB_NAME&#125;_v$&#123;bundle_version&#125;_$(date +%F)_release.ipa&quot;</span><br><span class="line"></span><br><span class="line"># 根据CI.plist文件设置的环境进行打包</span><br><span class="line"></span><br><span class="line">if [[ &quot;$IS_Debug&quot; = true ]]; then</span><br><span class="line">#Debug环境打包</span><br><span class="line">    echo &quot;打包环境:Debug&quot;</span><br><span class="line">    if [[ &quot;$IS_Need_archive&quot; = false ]]; then</span><br><span class="line">    </span><br><span class="line">        echo &quot;不需要打包&quot;</span><br><span class="line">        exit 1</span><br><span class="line">        </span><br><span class="line">    else</span><br><span class="line">    </span><br><span class="line">        echo &quot;打debug包&quot;</span><br><span class="line">        </span><br><span class="line">        if [[ -e $debug_xcarchive_out_path || -e $debug_ipa_out_path ]]; then</span><br><span class="line">            echo &quot;同名文件以及存在，请先修改xcode文件build版本号后再次尝试！&quot;</span><br><span class="line">            exit 1</span><br><span class="line">        fi</span><br><span class="line">        </span><br><span class="line">        # 清空上次构建</span><br><span class="line">        xcodebuild clean</span><br><span class="line">        </span><br><span class="line">        # 打包</span><br><span class="line">        xcodebuild archive -workspace ./JenkinsTest.xcworkspace/ -scheme JenkinsTest -archivePath $&#123;debug_xcarchive_out_path&#125; -configuration Debug -sdk iphoneos</span><br><span class="line"></span><br><span class="line">        # 导出安装包</span><br><span class="line">        xcodebuild -exportArchive -archivePath $&#123;debug_xcarchive_out_path&#125; -exportPath $&#123;debug_ipa_out_path&#125; -exportFormat ipa -exportProvisioningProfile &apos;JenkinsTestAdHoc&apos;</span><br><span class="line"></span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line">#Release环境打包</span><br><span class="line">    echo &quot;打包环境:Release&quot;</span><br><span class="line">    </span><br><span class="line">    if [[ &quot;$IS_Need_archive&quot; = false ]]; then</span><br><span class="line">    </span><br><span class="line">        echo &quot;不需要打包&quot;</span><br><span class="line">        exit 1</span><br><span class="line">        </span><br><span class="line">    else</span><br><span class="line">    </span><br><span class="line">        echo &quot;Release包&quot;</span><br><span class="line">        </span><br><span class="line">        if [[ -e $release_xcarchive_out_path || -e $release_ipa_out_path ]]; then</span><br><span class="line">            echo &quot;同名文件以及存在，请先修改xcode文件version版本号后再次尝试！&quot;</span><br><span class="line">            exit 1</span><br><span class="line">        fi</span><br><span class="line"></span><br><span class="line">        # 清空上次构建</span><br><span class="line">        xcodebuild clean</span><br><span class="line"></span><br><span class="line">        # 打包</span><br><span class="line">        xcodebuild archive -workspace ./JenkinsTest.xcworkspace/ -scheme JenkinsTest -archivePath $&#123;release_xcarchive_out_path&#125; -configuration Release -sdk iphoneos</span><br><span class="line"></span><br><span class="line">        # 导出安装包</span><br><span class="line">        xcodebuild -exportArchive -archivePath $&#123;release_xcarchive_out_path&#125; -exportPath $&#123;release_ipa_out_path&#125; -exportFormat ipa -exportProvisioningProfile &apos;JenkinsTestAdHoc&apos;</span><br><span class="line"></span><br><span class="line">    fi</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p>设置触发条件：<br>Triggers：<br>Success（脚本构建成功，正常退出(exit 0)）<br>Send To: Developers (管理员)、Recipient List （开发者列表）</p>
+<p>Fail（脚本构建失败，异常退出（exit 非0，如：exit 1））</p>
+<p>Always (总是发送：)<br>Developers（管理员）</p>
+<p><img src="/media/14818709984719.jpg" alt=""></p>
+<p><strong>5、构建后操作</strong></p>
+<p>设置邮件提醒</p>
+<p>选择Editable Email Notification</p>
+<p>Project Recipient List： 接收人邮件，多个用逗号分隔<br>Project Reply-To List：回复邮件，设置默认地址$DEFAULT_REPLYTO<br>Content Type: HTML<br>Default Content</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">(本邮件是程序自动下发的，请勿回复！)&lt;br/&gt;&lt;hr/&gt;</span><br><span class="line"></span><br><span class="line">项目名称：$PROJECT_NAME&lt;br/&gt;&lt;hr/&gt;</span><br><span class="line"></span><br><span class="line">构建编号：$BUILD_NUMBER&lt;br/&gt;&lt;hr/&gt;</span><br><span class="line"></span><br><span class="line">构建状态：$BUILD_STATUS&lt;br/&gt;&lt;hr/&gt;</span><br><span class="line"></span><br><span class="line">触发原因：$&#123;CAUSE&#125;&lt;br/&gt;&lt;hr/&gt;</span><br><span class="line"></span><br><span class="line">构建日志地址：&lt;a href=&quot;$&#123;BUILD_URL&#125;console&quot;&gt;$&#123;BUILD_URL&#125;console&lt;/a&gt;&lt;br/&gt;&lt;hr/&gt;</span><br><span class="line"></span><br><span class="line">构建地址：&lt;a href=&quot;$BUILD_URL&quot;&gt;$BUILD_URL&lt;/a&gt;&lt;br/&gt;&lt;hr/&gt;</span><br><span class="line"></span><br><span class="line">安装包地址：&lt;a&gt; http://&#123;你的jenkins服务器地址&#125;/DailyBuild/测试工程&lt;/a&gt;&lt;br/&gt;&lt;hr/&gt;</span><br><span class="line"></span><br><span class="line">变更集:$&#123;JELLY_SCRIPT,template=&quot;html&quot;&#125;&lt;br/&gt;&lt;hr/&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="构建测试"><a href="#构建测试" class="headerlink" title="构建测试"></a>构建测试</h2><p>1、设置打包环境为Debug<br>打开CI.plist文件设置<code>IS_DEBUG_ARCHIVE</code>为true</p>
+<p>2、设置<code>IS_NEED_ARCHIVE</code>为true</p>
+<p>3、设置Info.plist文件Build版本号，<strong>不能与上次构建的相同，否则会打包失败，因为导出的目录已经存在一个同名的文件</strong></p>
+<p>4、提交代码到仓库，完成自动化打包</p>
+<p>5、查看邮件</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/06/30/git分支开发常用命令/" itemprop="url">
                   git分支开发常用命令
                 </a>
@@ -285,8 +444,8 @@
 <p>上面两步可以合并为一行<br><code>git checkout -b 分支名</code></p>
 </blockquote>
 <p>注意：这里创建的是本地分支<br>如果多人开发，需要把本地分支提交到远程服务器</p>
-<h3 id="创建跟踪（tracking-branch）分支"><a href="#创建跟踪（tracking-branch）分支" class="headerlink" title="创建跟踪（tracking branch）分支"></a>创建跟踪（tracking branch）分支</h3><blockquote>
-<p><code>git checkout -b 分支名</code></p>
+<h3 id="创建远程分支的本地跟踪（tracking-branch）分支"><a href="#创建远程分支的本地跟踪（tracking-branch）分支" class="headerlink" title="创建远程分支的本地跟踪（tracking branch）分支"></a>创建远程分支的本地跟踪（tracking branch）分支</h3><blockquote>
+<p><code>git checkout -b 分支名 远程分支</code></p>
 </blockquote>
 <h3 id="同步远程分支的代码到本地"><a href="#同步远程分支的代码到本地" class="headerlink" title="同步远程分支的代码到本地"></a>同步远程分支的代码到本地</h3><blockquote>
 <p><code>git fetch</code> //同步所有的远程分支<br><code>git fetch 分支名</code> //同步单个分支的代码</p>
@@ -316,9 +475,10 @@
 <h3 id="暂存stash"><a href="#暂存stash" class="headerlink" title="暂存stash"></a>暂存stash</h3><blockquote>
 <p>场景一、你正在develop分支上开发一些新功能，这时候你的boss让你马上去修复一些线上（master分支）bug，这时候你需要checkout到master分支，并创建一个bugfix分支</p>
 <p>场景二、你正在develop分支上开发一些新功能，这时候测试小伙伴过来告诉你上次装的build版本出了一些bug，需要你立即修复一下出个新的build版本<br>，这时你需要在develop上创建一个新的bugfix分支，修复build版本的bug</p>
-<p>面对以上两种场景，需要保护工作现场，改完bug后回来接着干活，这时候<code>stash</code>指令派上用场了</p>
+<p>面对以上两种场景，需要保护工作现场，改完bug后回来接着干活，这时候<code>stash</code>指令就派上用场了</p>
 <p>切换分支之前执行<br><code>git stash</code> //保护工作现场</p>
 <p>开发完成之后切换回develop分支接着开发，执行<br><code>git stash pop</code> //回到工作现场</p>
+<p>清空工作现场的变更<br><code>git stash clear</code></p>
 </blockquote>
 
           
@@ -525,6 +685,8 @@
         
           
             <hr>
+<p>推荐编辑器：sublime、MWeb</p>
+<p>本文使用MWeb编写</p>
 <p>markdown源码如下:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"># 微博接口文档</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">[TOC]</span><br><span class="line"></span><br><span class="line">### 一、读取接口</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 1、获取最新的公共微博</span><br><span class="line"></span><br><span class="line">URL</span><br><span class="line">https://api.weibo.com/2/statuses/public_timeline.json</span><br><span class="line"></span><br><span class="line">支持格式</span><br><span class="line">JSON</span><br><span class="line"></span><br><span class="line">HTTP请求方式</span><br><span class="line">GET</span><br><span class="line"></span><br><span class="line">是否需要登陆</span><br><span class="line">是</span><br><span class="line"></span><br><span class="line">请求参数</span><br><span class="line"></span><br><span class="line">   参数|必选|类型及范围|说明                                   </span><br><span class="line">   :---:|:---:|:---:|:---:                       </span><br><span class="line"> access_token| true|string| 采用OAuth授权方式为必填参数，OAuth授权后获得。</span><br><span class="line"> page|false|int|单页返回的记录条数，默认为50。</span><br><span class="line"></span><br><span class="line">返回结果</span><br><span class="line">`json示例`</span><br><span class="line">``` json</span><br><span class="line">&#123;</span><br><span class="line">    &quot;statuses&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;created_at&quot;: &quot;Tue May 31 17:46:55 +0800 2011&quot;,</span><br><span class="line">            &quot;id&quot;: 11488058246,</span><br><span class="line">            &quot;text&quot;: &quot;求关注。&quot;，</span><br><span class="line">            &quot;source&quot;: &quot;&lt;a href=&quot;http://weibo.com&quot; rel=&quot;nofollow&quot;&gt;新浪微博&lt;/a&gt;&quot;,</span><br><span class="line">            &quot;favorited&quot;: false,</span><br><span class="line">            &quot;truncated&quot;: false,</span><br><span class="line">            &quot;in_reply_to_status_id&quot;: &quot;&quot;,</span><br><span class="line">            &quot;in_reply_to_user_id&quot;: &quot;&quot;,</span><br><span class="line">            &quot;in_reply_to_screen_name&quot;: &quot;&quot;,</span><br><span class="line">            &quot;geo&quot;: null,</span><br><span class="line">            &quot;mid&quot;: &quot;5612814510546515491&quot;,</span><br><span class="line">            &quot;reposts_count&quot;: 8,</span><br><span class="line">            &quot;comments_count&quot;: 9,</span><br><span class="line">            &quot;annotations&quot;: [],</span><br><span class="line">            &quot;user&quot;: &#123;</span><br><span class="line">                &quot;id&quot;: 1404376560,</span><br><span class="line">                &quot;screen_name&quot;: &quot;zaku&quot;,</span><br><span class="line">                &quot;name&quot;: &quot;zaku&quot;,</span><br><span class="line">                &quot;province&quot;: &quot;11&quot;,</span><br><span class="line">                &quot;city&quot;: &quot;5&quot;,</span><br><span class="line">                &quot;location&quot;: &quot;北京 朝阳区&quot;,</span><br><span class="line">                &quot;description&quot;: &quot;人生五十年，乃如梦如幻；有生斯有死，壮士复何憾。&quot;,</span><br><span class="line">                &quot;url&quot;: &quot;http://blog.sina.com.cn/zaku&quot;,</span><br><span class="line">                &quot;profile_image_url&quot;: &quot;http://tp1.sinaimg.cn/1404376560/50/0/1&quot;,</span><br><span class="line">                &quot;domain&quot;: &quot;zaku&quot;,</span><br><span class="line">                &quot;gender&quot;: &quot;m&quot;,</span><br><span class="line">                &quot;followers_count&quot;: 1204,</span><br><span class="line">                &quot;friends_count&quot;: 447,</span><br><span class="line">                &quot;statuses_count&quot;: 2908,</span><br><span class="line">                &quot;favourites_count&quot;: 0,</span><br><span class="line">                &quot;created_at&quot;: &quot;Fri Aug 28 00:00:00 +0800 2009&quot;,</span><br><span class="line">                &quot;following&quot;: false,</span><br><span class="line">                &quot;allow_all_act_msg&quot;: false,</span><br><span class="line">                &quot;remark&quot;: &quot;&quot;,</span><br><span class="line">                &quot;geo_enabled&quot;: true,</span><br><span class="line">                &quot;verified&quot;: false,</span><br><span class="line">                &quot;allow_all_comment&quot;: true,</span><br><span class="line">                &quot;avatar_large&quot;: &quot;http://tp1.sinaimg.cn/1404376560/180/0/1&quot;,</span><br><span class="line">                &quot;verified_reason&quot;: &quot;&quot;,</span><br><span class="line">                &quot;follow_me&quot;: false,</span><br><span class="line">                &quot;online_status&quot;: 0,</span><br><span class="line">                &quot;bi_followers_count&quot;: 215</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        ..</span><br><span class="line">    ],</span><br><span class="line">    &quot;previous_cursor&quot;: 0,</span><br><span class="line">    &quot;next_cursor&quot;: 11488013766,</span><br><span class="line">    &quot;total_number&quot;: 81655</span><br><span class="line">&#125;</span><br><span class="line">```</span><br></pre></td></tr></table></figure>
 <p>效果如下:</p>
@@ -927,11 +1089,14 @@ git remote -v
           
             <p>首先安利一波SDWebImage，SDWebImage是一个异步加载图片的框架，以UIImageView分类的方式实现，深受开发者喜欢，github上排行第一的图片框架，如果你还没用过，赶紧试试看吧~</p>
 <p>使用之前不妨先了解下SDImageCache缓存清理策略<br>现在打开SDImageCache.h头文件，从类名可以看出缓存是在这个类处理的</p>
-<p>接口声明上方有这么段注释<br>    /**</p>
-<pre><code>* SDImageCache maintains a memory cache and an optional disk cache. Disk cache write operations are performed
-* asynchronous so it doesn’t add unnecessary latency to the UI.
-*/
-</code></pre><p>通过注释我们知道SDImageCache包含内存缓存和磁盘缓存，写磁盘缓存的操作是异步执行的，不会阻塞UI</p>
+<p>接口声明上方有这么段注释</p>
+<blockquote>
+<pre><code>/**
+ * SDImageCache maintains a memory cache and an optional disk cache. Disk cache write operations are performed
+ * asynchronous so it doesn’t add unnecessary latency to the UI.
+ */
+</code></pre></blockquote>
+<p>通过注释我们知道SDImageCache包含内存缓存和磁盘缓存，写磁盘缓存的操作是异步执行的，不会阻塞UI</p>
 <p>好的，接着往下看</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * The maximum "total cost" of the in-memory image cache. The cost function is the number of pixels held in memory.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">assign</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSUInteger</span> maxMemoryCost;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * The maximum length of time to keep an image in the cache, in seconds</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">assign</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSInteger</span> maxCacheAge;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * The maximum size of the cache, in bytes.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">assign</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSUInteger</span> maxCacheSize;</span><br></pre></td></tr></table></figure>
 <p>通过maxMemoryCost可以设置图片占用内存的最大像素值，默认为0</p>
@@ -1187,7 +1352,7 @@ deploy:
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
