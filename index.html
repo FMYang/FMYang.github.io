@@ -323,7 +323,8 @@
 <p>打开Jenkins-&gt;系统设置-&gt; Extended E-mail Notification-&gt;打开高级</p>
 <p>设置<br>SMTP server: smtp.qq.com<br>Default user E-mail suffix: @qq.com</p>
 <p>勾选Use SMTP Authentication<br>设置<br>用户名：管理员邮箱名<br>密码：上面QQ回执的密码<br>SMTP端口:465<br>字符集：UTF-8</p>
-<p>设置完成，测试邮件配置<br>勾选Test e-mail recipient，填写邮箱地址，点击Test configuration<br>发送成功会显示：<br><em>Email was successfully sent</em></p>
+<p>设置完成，测试邮件配置<br>勾选通过发送测试邮件测试配置，填写邮箱地址，点击Test configuration<br>发送成功会显示：<br><em>Email was successfully sent</em></p>
+<p><img src="/media/15D74041-0FD2-474D-A3AC-84327B421293.png" alt="15D74041-0FD2-474D-A3AC-84327B421293"></p>
 <h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h2><p>打开jenkins首页，点击创建-&gt;jenkinsTest-&gt;构建一个自由风格的软件项目-&gt;OK,创建成功</p>
 <h2 id="设置webhooks"><a href="#设置webhooks" class="headerlink" title="设置webhooks"></a>设置webhooks</h2><p>以Gogs为例，webhooks格式如下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http(s)://&lt;&lt; jenkins-server &gt;&gt;/gogs-webhook/?job=&lt;&lt; jobname &gt;&gt;</span><br></pre></td></tr></table></figure>
