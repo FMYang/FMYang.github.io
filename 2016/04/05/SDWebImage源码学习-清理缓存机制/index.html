@@ -73,7 +73,7 @@
 
 /**
  * SDImageCac">
-<meta property="og:updated_time" content="2016-08-30T01:23:22.000Z">
+<meta property="og:updated_time" content="2017-02-07T07:44:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SDWebImage源码学习-缓存清理机制">
 <meta name="twitter:description" content="首先安利一波SDWebImage，SDWebImage是一个异步加载图片的框架，以UIImageView分类的方式实现，深受开发者喜欢，github上排行第一的图片框架，如果你还没用过，赶紧试试看吧~
@@ -310,6 +310,7 @@
  */
 </code></pre></blockquote>
 <p>通过注释我们知道SDImageCache包含内存缓存和磁盘缓存，写磁盘缓存的操作是异步执行的，不会阻塞UI</p>
+<a id="more"></a>
 <p>好的，接着往下看</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * The maximum "total cost" of the in-memory image cache. The cost function is the number of pixels held in memory.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">assign</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSUInteger</span> maxMemoryCost;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * The maximum length of time to keep an image in the cache, in seconds</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">assign</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSInteger</span> maxCacheAge;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * The maximum size of the cache, in bytes.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">assign</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSUInteger</span> maxCacheSize;</span><br></pre></td></tr></table></figure>
 <p>通过maxMemoryCost可以设置图片占用内存的最大像素值，默认为0</p>
