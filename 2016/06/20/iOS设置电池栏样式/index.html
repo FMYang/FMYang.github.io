@@ -69,7 +69,7 @@
 首先在Info.plist文件中加入View controller-based status bar appearance这个key，设置为NO
 经测试，总结下这个key的用法
 1、设置为NO的时候，默认会隐藏导航栏，需要在APPDele">
-<meta property="og:updated_time" content="2016-07-19T07:05:04.000Z">
+<meta property="og:updated_time" content="2017-02-07T07:56:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS设置电池栏样式">
 <meta name="twitter:description" content="由于工作项目使用的导航栏是自定义的，所以下文所述的设置方法，可能对使用原生导航栏的同学无效，先写自定义导航栏的情况下的设置，至于使用原生导航栏的情况，后面再写。
@@ -280,6 +280,7 @@
 <p>经测试，总结下这个key的用法</p>
 <p>1、设置为NO的时候，默认会隐藏导航栏，需要在APPDelegate里面加上如下代码显示并设置默认电池栏风格</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">UIApplication</span> sharedApplication] setStatusBarHidden:<span class="literal">NO</span>];</span><br><span class="line">[[<span class="built_in">UIApplication</span> sharedApplication] setStatusBarStyle:<span class="built_in">UIStatusBarStyleDefault</span>];</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <p>在需要改变电池样式的地方使用</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//设置样式</span></span><br><span class="line">   [[<span class="built_in">UIApplication</span> sharedApplication] setStatusBarStyle:<span class="built_in">UIStatusBarStyleDefault</span>];</span><br><span class="line"></span><br><span class="line">   <span class="comment">//隐藏电池栏</span></span><br><span class="line">   [[<span class="built_in">UIApplication</span> sharedApplication] setStatusBarHidden:<span class="literal">YES</span> withAnimation:<span class="built_in">UIStatusBarAnimationFade</span>];</span><br></pre></td></tr></table></figure>
 <p>设置电池栏的样式，重写preferredStatusBarStyle方法设置电池栏样式无效  </p>
@@ -386,7 +387,7 @@
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/images/default_avatar.jpg"
+               src="FMYang.github.io/images/avatar.gif"
                alt="杨方明" />
           <p class="site-author-name" itemprop="name">杨方明</p>
           <p class="site-description motion-element" itemprop="description"></p>
