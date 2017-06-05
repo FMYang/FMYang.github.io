@@ -222,6 +222,129 @@
             
               
                 
+                <a class="post-title-link" href="/2017/06/05/Object-C编码规范/" itemprop="url">
+                  Object-C编码规范
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-06-05T16:31:13+08:00" content="2017-06-05">
+              2017-06-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/06/05/Object-C编码规范/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/05/Object-C编码规范/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="命名"><a href="#命名" class="headerlink" title="命名"></a>命名</h2><h3 id="一、变量命名"><a href="#一、变量命名" class="headerlink" title="一、变量命名"></a>一、变量命名</h3><ul>
+<li>Objective-C中变量，包括属性、实例变量和静态变量，命名过程中三者都遵循”驼峰原则”的命名规范，并且命名的时候避免出现数字编号或者无意义的命名。</li>
+</ul>
+<h4 id="1、属性"><a href="#1、属性" class="headerlink" title="1、属性"></a>1、属性</h4><ul>
+<li><p>Objective-C中的属性，即使用@property对属性命名，声明属性的时候，一般使用“@property” + “(属性修饰的关键字)”＋”属性的类型”+”*属性名”。属性是暴露在外部的一个变量，供外部类调用，会自动生成一个”下划线_ + 属性名”的成员变量。下面说明一下属性的命名规范。</p>
+</li>
+<li><p>Objective-C沿用c语言中的一些关键字，在命名属性的时候，注意命名的变量名称与保留关键字冲突。例如：</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatamic, assign) CGFloat float; (float是保留关键字)  </span><br><span class="line">@property (nonamatic, copy) NSString *register; (register也是保留的关键字）</span><br></pre></td></tr></table></figure>
+<ul>
+<li>当名称有多个单词组成的时候，不要使用特殊的字符，例如标点符号，下划线或者破折号等作为成员变量的组成部分。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">以下是错误的类型:</span><br><span class="line">@property (nonatomic, assing) NSIngeter key_Value; (下划线类型)   </span><br><span class="line">@property (nonatomic, assign) NSIngeter #keyValue; (符号类型)     </span><br><span class="line">@property (nonatomic, assign) NSIngeter key-Value; (破折号类型)</span><br><span class="line"></span><br><span class="line">正确的方式应该是:</span><br><span class="line">@property (nonamatic, assign) NSIngeter keyValue;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>成员变量的命名尽量做到简单易懂，不要产生歧义。例如：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic, copy) NSString *userName;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>对于有些特殊类型的属性命名的时候加上类型。例如：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic, strong) NSArray *nameArr;</span><br><span class="line">@property (nonatomic, strong) NSDictionary *valueDict;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在特殊情况下首单词是大家都知道的，使用缩写，例如：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic, strong) NSURLRequest *HTTPRequest; //一个HTTPS请求</span><br></pre></td></tr></table></figure>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/06/05/Object-C编码规范/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/20/iOS-Jenkins-Gogs-Git自动化打包集成方案/" itemprop="url">
                   iOS-Jenkins-Gogs-Git自动化打包集成方案
                 </a>
@@ -1174,7 +1297,7 @@ https://ruby.taobao.org
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
