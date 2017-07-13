@@ -63,7 +63,7 @@ demo下载
 方案一：隐藏系统的Tabbar，使用自定义的View代替Tabbar优点：使用自定义的View，tabbar的风格完全自由设计，全部为图片，图片加文字，随意组合都非常方便缺点：tabbar隐藏和显示的动画效果很难做到与原生媲美，特别是右滑返回手势的时候，tabbar的隐藏和">
 <meta property="og:type" content="article">
 <meta property="og:title" content="自定义Tabbar">
-<meta property="og:url" content="http://yoursite.com/2017/06/05/自定义Tabbar/index.html">
+<meta property="og:url" content="http://yoursite.com/2017/07/12/自定义Tabbar/index.html">
 <meta property="og:site_name" content="杨方明个人博客">
 <meta property="og:description" content="工作中经常碰到要自定义Tabbar样式，今天就来探讨下自定义Tabbar样式的二种方案
 demo下载
@@ -74,7 +74,7 @@ demo下载
 <meta property="og:image" content="http://yoursite.com/media/weibo.gif">
 <meta property="og:image" content="http://yoursite.com/media/weibo1.gif">
 <meta property="og:image" content="http://yoursite.com/media/weibo2.gif">
-<meta property="og:updated_time" content="2017-07-13T08:28:47.000Z">
+<meta property="og:updated_time" content="2017-07-13T08:58:28.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="自定义Tabbar">
 <meta name="twitter:description" content="工作中经常碰到要自定义Tabbar样式，今天就来探讨下自定义Tabbar样式的二种方案
@@ -247,8 +247,8 @@ demo下载
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-06-05T16:31:13+08:00" content="2017-06-05">
-              2017-06-05
+            <time itemprop="dateCreated" datetime="2017-07-12T16:31:13+08:00" content="2017-07-12">
+              2017-07-12
             </time>
           </span>
 
@@ -277,8 +277,8 @@ demo下载
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2017/06/05/自定义Tabbar/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/05/自定义Tabbar/" itemprop="commentsCount"></span>
+                <a href="/2017/07/12/自定义Tabbar/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/07/12/自定义Tabbar/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -319,7 +319,7 @@ demo下载
 <p>具体实现如下：</p>
 <p>定义一个UITabbar的子类CTTabBar</p>
 <p>CTTabBar.m</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">@implementation CTTabbar</span><br><span class="line"></span><br><span class="line">//核心代码</span><br><span class="line">- (void)layoutSubviews</span><br><span class="line">&#123;</span><br><span class="line">    [super layoutSubviews];</span><br><span class="line">    </span><br><span class="line">     //重新布局tabbar按钮布局</span><br><span class="line">    for(UIView *tabBarButton in self.subviews)</span><br><span class="line">    &#123;</span><br><span class="line">        if([tabBarButton isKindOfClass:NSClassFromString(@&quot;UITabBarButton&quot;)])</span><br><span class="line">        &#123;</span><br><span class="line">            CGFloat btnWidth = (self.frame.size.width-self.centerBtnWidth) / self.items.count;</span><br><span class="line">            CGFloat btnHeight = self.frame.size.height;</span><br><span class="line">            </span><br><span class="line">            CGRect btnRect = tabBarButton.frame;</span><br><span class="line">            btnRect.size.width = btnWidth;</span><br><span class="line">            btnRect.size.height = btnHeight;</span><br><span class="line">            </span><br><span class="line">            //只支持items为偶数个，比如有5个button，items.count为4，加上中间按钮共5个（一般中间按钮需要订制的，button都未奇数个）</span><br><span class="line">            if(index &gt;= self.items.count/2)</span><br><span class="line">            &#123;</span><br><span class="line">                btnRect.origin.x = btnWidth*index+_centerBtnWidth;</span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">            &#123;</span><br><span class="line">                btnRect.origin.x = btnWidth*index;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            tabBarButton.frame = btnRect;</span><br><span class="line">            </span><br><span class="line">            index++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">@implementation CTTabbar</span><br><span class="line"></span><br><span class="line">//核心代码</span><br><span class="line">- (void)layoutSubviews</span><br><span class="line">&#123;</span><br><span class="line">    [super layoutSubviews];</span><br><span class="line">    </span><br><span class="line">     //重新布局tabbar按钮布局</span><br><span class="line">    for(UIView *tabBarButton in self.subviews)</span><br><span class="line">    &#123;</span><br><span class="line">        if([tabBarButton isKindOfClass:NSClassFromString(@&quot;UITabBarButton&quot;)])</span><br><span class="line">        &#123;</span><br><span class="line">            CGFloat btnWidth = (self.frame.size.width-self.centerBtnWidth) / self.items.count;</span><br><span class="line">            CGFloat btnHeight = self.frame.size.height;</span><br><span class="line">            </span><br><span class="line">            CGRect btnRect = tabBarButton.frame;</span><br><span class="line">            btnRect.size.width = btnWidth;</span><br><span class="line">            btnRect.size.height = btnHeight;</span><br><span class="line">            </span><br><span class="line">            //只支持items为偶数个，比如有5个button，items.count为4，加上中间按钮共5个</span><br><span class="line">            if(index &gt;= self.items.count/2)</span><br><span class="line">            &#123;</span><br><span class="line">                btnRect.origin.x = btnWidth*index+_centerBtnWidth;</span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">            &#123;</span><br><span class="line">                btnRect.origin.x = btnWidth*index;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            tabBarButton.frame = btnRect;</span><br><span class="line">            </span><br><span class="line">            index++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
 <p>定义一个UITabbarController的子类CTTabBarController</p>
 <p>CTTabBarController.m</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - private method</span><br><span class="line">- (void)setupCustomTabbar</span><br><span class="line">&#123;</span><br><span class="line">    CTTabbar *tabbar = [[CTTabbar alloc]init];</span><br><span class="line">    </span><br><span class="line">    tabbar.centerBtnWidth = 60;</span><br><span class="line">       </span><br><span class="line">    tabbar.centerBtnClickBlock = ^() &#123;</span><br><span class="line">        NSLog(@&quot;centerBtnClick&quot;);</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    //核心代码，使用KVC替换系统的UITabbar</span><br><span class="line">    [self setValue:tabbar forKey:@&quot;tabBar&quot;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)setCustomViewControllers:(NSArray *)customViewControllers</span><br><span class="line">&#123;</span><br><span class="line">    for(UINavigationController *nav in customViewControllers)</span><br><span class="line">    &#123;</span><br><span class="line">        [self addChildViewController:nav];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    [self setupCustomTabbar];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -353,17 +353,13 @@ demo下载
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/10/20/iOS-Jenkins-Gogs-Git自动化打包集成方案/" rel="next" title="iOS-Jenkins-Gogs-Git自动化打包集成方案">
-                <i class="fa fa-chevron-left"></i> iOS-Jenkins-Gogs-Git自动化打包集成方案
+              <a href="/2017/06/05/Object-C编码规范/" rel="next" title="Object-C编码规范">
+                <i class="fa fa-chevron-left"></i> Object-C编码规范
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/06/05/Object-C编码规范/" rel="prev" title="Object-C编码规范">
-                Object-C编码规范 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -389,8 +385,8 @@ demo下载
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/06/05/自定义Tabbar/"
-           data-title="自定义Tabbar" data-url="http://yoursite.com/2017/06/05/自定义Tabbar/">
+      <div class="ds-thread" data-thread-key="2017/07/12/自定义Tabbar/"
+           data-title="自定义Tabbar" data-url="http://yoursite.com/2017/07/12/自定义Tabbar/">
       </div>
     
   </div>
