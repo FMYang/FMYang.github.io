@@ -293,7 +293,7 @@
           <p>工作中经常碰到要自定义Tabbar样式，今天就来探讨下自定义Tabbar样式的二种方案</p>
 <p><a href="https://github.com/FMYang/CustomTabbar">demo下载</a></p>
 <h3 id="二种方案的优缺点"><a href="#二种方案的优缺点" class="headerlink" title="二种方案的优缺点"></a>二种方案的优缺点</h3><p>方案一：<br>隐藏系统的Tabbar，使用自定义的View代替Tabbar<br>优点：使用自定义的View，tabbar的风格完全自由设计，全部为图片，图片加文字，随意组合都非常方便<br>缺点：tabbar隐藏和显示的动画效果很难做到与原生媲美，特别是右滑返回手势的时候，tabbar的隐藏和显示动画很难控制</p>
-<p>方案二：<br>使用KVC用自定义的Tabbar替换掉系统的Tabbar<br>优点：tabbar隐藏和显示的动画与系统一直<br>缺点：由于使用KVC的方式，万一系统的tabbar属性改名或者改为禁止使用KVC替换，该方案就会失效</p>
+<p>方案二：<br>使用KVC用自定义的Tabbar替换掉系统的Tabbar<br>优点：tabbar隐藏和显示的动画与系统的一致<br>缺点：由于使用KVC的方式，万一系统的tabbar属性改名或者改为禁止使用KVC替换，该方案就会失效</p>
 <p><a href="https://github.com/ChenYilong/CYLTabBarController">CYLTabBarController</a>的实现思路就是基于第二种方案的</p>
 <h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>上面说了各自的优缺点，下面来看具体的实现</p>
 <h4 id="一、隐藏系统的Tabbar"><a href="#一、隐藏系统的Tabbar" class="headerlink" title="一、隐藏系统的Tabbar"></a>一、隐藏系统的Tabbar</h4><p>思路就是定义一个UITabbarController的子类，然后遍历UITabbarController.view的子视图，如果子视图的类型为Tabbar的类型就从父视图移除，注意：如果是隐藏的话，会有出现黑条的bug</p>
