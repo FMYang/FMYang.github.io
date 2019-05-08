@@ -222,6 +222,233 @@
             
               
                 
+                <a class="post-title-link" href="/2017/08/12/Git内部工作原理/" itemprop="url">
+                  Git内部工作原理
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-12T20:31:13+08:00" content="2017-08-12">
+              2017-08-12
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Git/" itemprop="url" rel="index">
+                    <span itemprop="name">Git</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/08/12/Git内部工作原理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/08/12/Git内部工作原理/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Git是一个快速，可扩展的分布式版本控制系统。从根本上来说，Git是一个内容寻址（content-addressable）文件系统。</p>
+<p>Git提供了非常丰富的指令集，根据功能划分为底层命令和高层命令，平时工作中使用最多的add、commit、reset等就属于高层命令。大部分情况下我们不会接触到Git的底层命令，但是为了了解Git的工作原理，了解底层命令就很重要了。</p>
+<p>接下来我们来探索Git的内部工作原理</p>
+<h1 id="git目录结构"><a href="#git目录结构" class="headerlink" title=".git目录结构"></a>.git目录结构</h1><p>首先我们新建一个空文件夹，执行<code>git init</code>初始化命令，创建git版本库。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir test1</span><br><span class="line">$ cd test1</span><br><span class="line">$ git init</span><br><span class="line">$ cd .git</span><br><span class="line">$ ls -F1</span><br><span class="line"></span><br><span class="line">.git目录结构如下：</span><br><span class="line">HEAD         // HEAD指针，指向当前分支</span><br><span class="line">branches/    // 分支</span><br><span class="line">config       // 项目特有的配置选项</span><br><span class="line">description  // 仅供 GitWeb 程序使用，无需关心</span><br><span class="line">hooks/       // 客户端或服务端的钩子脚本</span><br><span class="line">info/        </span><br><span class="line">objects/     // 存储所有数据内容</span><br><span class="line">refs/        // 存储指向数据（分支）的提交对象的指针</span><br><span class="line">index        // 保存暂存区信息（尚待创建）</span><br></pre></td></tr></table></figure>
+<p>.git的目录结构及作用上面已经添加了备注，其中有四个条目很重要：HEAD文件、尚未创建的index文件，和objects目录、refs目录。这些条目是Git的核心组成部分。</p>
+<h1 id="Git对象"><a href="#Git对象" class="headerlink" title="Git对象"></a>Git对象</h1><p>Git一共有四种类型的对象：</p>
+<ul>
+<li>Blob object</li>
+<li>Commit object</li>
+<li>Tree object</li>
+<li>Tag object</li>
+</ul>
+<p>Blob对象存储：</p>
+<ul>
+<li>数据内容（文本文件、源代码、图片等）</li>
+</ul>
+<p>Commit对象存储：</p>
+<ul>
+<li>tree对象</li>
+<li>parent指针（如果有）</li>
+<li>作者对象（姓名、邮箱、提交时间）</li>
+<li>提交者对象（姓名、邮箱、提交时间）</li>
+</ul>
+<p>Tree对象存储：</p>
+<ul>
+<li>指向数据内容或者Tree对象的指针（SHA-1）</li>
+<li>模式</li>
+<li>类型</li>
+<li>文件名</li>
+</ul>
+<p>Tag对象一般是Commit对象</p>
+<p>Tree对象对应文件目录，blob对象对应文件，commit对象对应当前分支的快照（snapshot）</p>
+<h1 id="执行git-add和git-commit时发生了什么？"><a href="#执行git-add和git-commit时发生了什么？" class="headerlink" title="执行git add和git commit时发生了什么？"></a>执行git add和git commit时发生了什么？</h1><p>上面已经创建一个test1的空目录，接下来我们添加一个文件到test1目录。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &apos;hello&apos; &gt; test.txt</span><br></pre></td></tr></table></figure>
+<p>执行git status命令，可以看到目录下多了个未跟踪的文件test.txt，这时候执行git add命令，观察.git目录有什么变化。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git add test.txt</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">cd .git</span><br><span class="line">→ tree</span><br><span class="line">.</span><br><span class="line">├── HEAD</span><br><span class="line">├── branches</span><br><span class="line">├── config</span><br><span class="line">├── description</span><br><span class="line">├── hooks</span><br><span class="line">│   ├── applypatch-msg.sample</span><br><span class="line">│   ├── commit-msg.sample</span><br><span class="line">│   ├── fsmonitor-watchman.sample</span><br><span class="line">│   ├── post-update.sample</span><br><span class="line">│   ├── pre-applypatch.sample</span><br><span class="line">│   ├── pre-commit.sample</span><br><span class="line">│   ├── pre-push.sample</span><br><span class="line">│   ├── pre-rebase.sample</span><br><span class="line">│   ├── pre-receive.sample</span><br><span class="line">│   ├── prepare-commit-msg.sample</span><br><span class="line">│   └── update.sample</span><br><span class="line">├── index</span><br><span class="line">├── info</span><br><span class="line">│   └── exclude</span><br><span class="line">├── objects</span><br><span class="line">│   ├── ce</span><br><span class="line">│   │   └── 013625030ba8dba906f756967f9e9ca394464a</span><br><span class="line">│   ├── info</span><br><span class="line">│   └── pack</span><br><span class="line">└── refs</span><br><span class="line">    ├── heads</span><br><span class="line">    └── tags</span><br><span class="line"></span><br><span class="line">10 directories, 17 files</span><br></pre></td></tr></table></figure>
+<p>可以看到，执行git add命令后，.git/object/目录下新增了一个目录和一个文件（其实是一个40位哈希值，前两位是目录名，后38位是文件名），其实只是多出了一个blob对象，同时创建了一个index文件。后面我们会讲解这个新增的blob对象以及index文件是如何生成的。</p>
+<p>我们接着执行git commit命令，看看会发生什么。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">→ tree</span><br><span class="line">.</span><br><span class="line">├── COMMIT_EDITMSG</span><br><span class="line">├── HEAD</span><br><span class="line">├── branches</span><br><span class="line">├── config</span><br><span class="line">├── description</span><br><span class="line">├── hooks</span><br><span class="line">│   ├── applypatch-msg.sample</span><br><span class="line">│   ├── commit-msg.sample</span><br><span class="line">│   ├── fsmonitor-watchman.sample</span><br><span class="line">│   ├── post-update.sample</span><br><span class="line">│   ├── pre-applypatch.sample</span><br><span class="line">│   ├── pre-commit.sample</span><br><span class="line">│   ├── pre-push.sample</span><br><span class="line">│   ├── pre-rebase.sample</span><br><span class="line">│   ├── pre-receive.sample</span><br><span class="line">│   ├── prepare-commit-msg.sample</span><br><span class="line">│   └── update.sample</span><br><span class="line">├── index</span><br><span class="line">├── info</span><br><span class="line">│   └── exclude</span><br><span class="line">├── logs</span><br><span class="line">│   ├── HEAD</span><br><span class="line">│   └── refs</span><br><span class="line">│       └── heads</span><br><span class="line">│           └── master</span><br><span class="line">├── objects</span><br><span class="line">│   ├── 2b</span><br><span class="line">│   │   └── f705f913222f2032e114e609dfe7f2e97f23bd</span><br><span class="line">│   ├── 92</span><br><span class="line">│   │   └── 0512d27e4df0c79ca4a929bc5d4254b3d05c4c</span><br><span class="line">│   ├── ce</span><br><span class="line">│   │   └── 013625030ba8dba906f756967f9e9ca394464a</span><br><span class="line">│   ├── info</span><br><span class="line">│   └── pack</span><br><span class="line">└── refs</span><br><span class="line">    ├── heads</span><br><span class="line">    │   └── master</span><br><span class="line">    └── tags</span><br><span class="line"></span><br><span class="line">15 directories, 23 files</span><br></pre></td></tr></table></figure>
+<p>观察控制台的输出可以看到，commit之后多出了5个目录和5个文件，我们只关注objects/目录和refs/目录。执行commit之后，objects目录下新增了两个对象，同时refs/heads/目录下新增了一个master文件。</p>
+<p>总结一下，执行git add和git commit命令，objects目录下新增了3个对象，新增了一个index文件和master文件。</p>
+<p>这些对象和文件是如何产生的呢，下面我们通过git的底层命令来复盘上面的操作。</p>
+<h1 id="使用Git底层命令演示git-add和git-commit的原理"><a href="#使用Git底层命令演示git-add和git-commit的原理" class="headerlink" title="使用Git底层命令演示git add和git commit的原理"></a>使用Git底层命令演示git add和git commit的原理</h1><p>下面我们新建一个空目录test2，并执行git init命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir test2</span><br><span class="line">cd test2</span><br><span class="line">git init</span><br></pre></td></tr></table></figure>
+<p>使用git has-object往Git数据库写入内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &apos;hello&apos; | git hash-object -w --stdin</span><br><span class="line">ce013625030ba8dba906f756967f9e9ca394464a</span><br></pre></td></tr></table></figure>
+<p>可以看到，控制台输出了一个40位的哈希值，与上面对比发现是一样的。为什么是一样的呢？因为Git是通过头部信息（header）+数据内容（content）通过SHA-1检验计算校验和生成的。</p>
+<p>执行完has-object命令后，观察objects/目录的变化，我们用find命令来查看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">→ find .git/objects -type f</span><br><span class="line">.git/objects/ce/013625030ba8dba906f756967f9e9ca394464a</span><br></pre></td></tr></table></figure>
+<p>可以看到object/目录下多了一个对象，正是我们刚刚写进Git数据后返回的哈希值。</p>
+<p>Git数据库是一个简单的key-value data store，哈希值作为key，数据内容作为value。我们可以通过cat-file命令查看这个key对应的内容以及类型。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">→ git cat-file -p ce013625030ba8dba906f756967f9e9ca394464a</span><br><span class="line">hello</span><br><span class="line">→ git cat-file -t ce013625030ba8dba906f756967f9e9ca394464a</span><br><span class="line">blob</span><br></pre></td></tr></table></figure>
+<p>可以看到，输出的内容正是我们之前写入的，类型是blob类型。</p>
+<p>接着我们执行git status命令看看发生了什么</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">→ git status</span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">No commits yet</span><br><span class="line"></span><br><span class="line">nothing to commit (create/copy files and use &quot;git add&quot; to track)</span><br></pre></td></tr></table></figure>
+<p>这里有一个问题，我们之前仅仅保存了文件内容，并没有指定文件名。我们使用tree命令，查看.git目录，可以发现，index文件还没有被创建。</p>
+<p>下面我们使用update-index命令来创建一个暂存区，并为之前写入的文件内容指定一个文件名。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git update-index --add --cacheinfo 100644 ce013625030ba8dba906f756967f9e9ca394464a test.txt</span><br></pre></td></tr></table></figure>
+<p>再次使用tree命令查看<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">→ tree .git</span><br><span class="line">.git</span><br><span class="line">├── HEAD</span><br><span class="line">├── branches</span><br><span class="line">├── config</span><br><span class="line">├── description</span><br><span class="line">├── hooks</span><br><span class="line">│   ├── applypatch-msg.sample</span><br><span class="line">│   ├── commit-msg.sample</span><br><span class="line">│   ├── fsmonitor-watchman.sample</span><br><span class="line">│   ├── post-update.sample</span><br><span class="line">│   ├── pre-applypatch.sample</span><br><span class="line">│   ├── pre-commit.sample</span><br><span class="line">│   ├── pre-push.sample</span><br><span class="line">│   ├── pre-rebase.sample</span><br><span class="line">│   ├── pre-receive.sample</span><br><span class="line">│   ├── prepare-commit-msg.sample</span><br><span class="line">│   └── update.sample</span><br><span class="line">├── index</span><br><span class="line">├── info</span><br><span class="line">│   └── exclude</span><br><span class="line">├── objects</span><br><span class="line">│   ├── ce</span><br><span class="line">│   │   └── 013625030ba8dba906f756967f9e9ca394464a</span><br><span class="line">│   ├── info</span><br><span class="line">│   └── pack</span><br><span class="line">└── refs</span><br><span class="line">    ├── heads</span><br><span class="line">    └── tags</span><br><span class="line"></span><br><span class="line">10 directories, 17 files</span><br></pre></td></tr></table></figure></p>
+<p>可以发现index文件被创建出来了。这个时候，再次执行git status</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">→ git status</span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">No commits yet</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use <span class="string">"git rm --cached &lt;file&gt;..."</span> to unstage)</span><br><span class="line"></span><br><span class="line">	new file:   test.txt</span><br><span class="line"></span><br><span class="line">Changes not staged <span class="keyword">for</span> commit:</span><br><span class="line">  (use <span class="string">"git add/rm &lt;file&gt;..."</span> to update what will be committed)</span><br><span class="line">  (use <span class="string">"git checkout -- &lt;file&gt;..."</span> to discard changes <span class="keyword">in</span> working directory)</span><br><span class="line"></span><br><span class="line">	deleted:    test.txt</span><br></pre></td></tr></table></figure>
+<p>可以发现，test.txt文件已经加入暂存区了，下面还有一个标记为删除的test.txt，为什么呢？<br>因为我们本地没有test.txt文件，而暂存区有这个文件，使用git status的时候是对比工作目录和暂存区的文件。</p>
+<p>如果介意这个deleted的log，可以已通过<code>git checkout -- test.txt</code>命令让暂存区的文件覆盖工作区的文件，我们先不管。</p>
+<p>执行git add的时候，除了上面两步，还有一步是将文件写入一个树对象。可以通过git write-tree命令来完成</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git write-tree ce013625030ba8dba906f756967f9e9ca394464a</span><br><span class="line">920512d27e4df0c79ca4a929bc5d4254b3d05c4c</span><br></pre></td></tr></table></figure>
+<p>执行完后发现，输出了一个40位的哈希值，与上面git add之后对比，可以发现是同一个哈希值。<br>我们验证下这个对象的类型：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">→ git cat-file -t 920512d27e4df0c79ca4a929bc5d4254b3d05c4c</span><br><span class="line">tree</span><br></pre></td></tr></table></figure>
+<p>可以发现这确实是个树对象。</p>
+<p>至此，我们使用底层命令完成了git add所做的工作。git add的时候做什么，我们可以总结下：</p>
+<ol>
+<li>将文件内容写入Git数据库</li>
+<li>更新暂存区并指定文件名，如果是首次提交到暂存区则是创建暂存区（对应.git目录下的index文件）</li>
+<li>将文件写入树对象</li>
+</ol>
+<p>到这里我们还没有提交对象，是时候创建一次提交了。我们可以使用commit-tree命令创建一次提交。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">→ echo &apos;first commit&apos; | git commit-tree 9205</span><br><span class="line">c4cf32be0098f786df455e3fee67ba21779dd70a</span><br></pre></td></tr></table></figure>
+<p>可以发现这里输出的哈希值与test1演示项目中的值不同，其他两个都相同，为什么呢？因为commit对象包含时间戳信息，所以计算出来的哈希值肯定是不一样的。</p>
+<p>验证下这个对象的类型：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">→ git cat-file -t c4cf</span><br><span class="line">commit</span><br></pre></td></tr></table></figure>
+<p>可以发现这确实是一个commit对象。</p>
+<p>使用git log c4cf命令查看：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">commit c4cf32be0098f786df455e3fee67ba21779dd70a</span><br><span class="line">Author: yfm &lt;imyangfm@gmail.com&gt;</span><br><span class="line">Date:   Mon Apr 29 16:30:31 2019 +0800</span><br><span class="line"></span><br><span class="line">    first commit</span><br></pre></td></tr></table></figure></p>
+<p>可以看到我们在不使用高层命令的情况下，也完成了一个完整的提交历史。</p>
+<p>别高兴的太早，我们我们使用git log命令查看，发现似乎少了点什么东西</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">→ git log</span><br><span class="line">fatal: your current branch &apos;master&apos; does not have any commits yet</span><br></pre></td></tr></table></figure>
+<p>使用git log命令查看，发现master分支还没有任何提交信息，为什么呢？</p>
+<p>对照test1项目，可以发现我们refs/heads目录下还少了个master文件。master文件执行最近一次提交的<strong>引用</strong>。不可能每次通过哈希值去追溯提交历史，我们可以起个简单的名字方便我们记忆，Git默认的分支名是master，我们就用这个名字代替提交对象的哈希值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &apos;c4cf32be0098f786df455e3fee67ba21779dd70a&apos; &gt; .git/refs/heads/master</span><br></pre></td></tr></table></figure>
+<p>再次运行git log，发现已经与test1项目完全一样了，至此我们使用底层命令完成了git add和git commit所做的所有工作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git log --pretty=oneline</span><br><span class="line">c4cf32be0098f786df455e3fee67ba21779dd70a (HEAD -&gt; master) first commit</span><br></pre></td></tr></table></figure>
+<p>总结下git commit时做了什么：</p>
+<ol>
+<li>创建一个提交对象</li>
+<li>创建一个指向改提交对象的master指针</li>
+</ol>
+<p>最后用一张图总结：</p>
+<p><img src="/media/15573059903154.jpg" alt="Git版本库"></p>
+<h1 id="SHA-1检验计算"><a href="#SHA-1检验计算" class="headerlink" title="SHA-1检验计算"></a>SHA-1检验计算</h1><p>哈希（hash）使用数据摘要算法（或称散列算法），是信息安全领域中重要的理论基石。该算法将任意长度的输入经过散列运算转换为固定长度输出。固定长度的输出可以称为对应输入内容的数组摘要或哈希值。</p>
+<p>前文看到的哪些哈希值是如何计算的呢？</p>
+<p>下面内容摘抄自：<a href="https://git-scm.com/book/zh/v2/Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86-Git-%E5%AF%B9%E8%B1%A1" target="_blank" rel="external">https://git-scm.com/book/zh/v2/Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86-Git-%E5%AF%B9%E8%B1%A1</a></p>
+<p>可以通过 irb 命令启动 Ruby 的交互模式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ irb</span><br><span class="line">&gt;&gt; content = &quot;what is up, doc?&quot;</span><br><span class="line">=&gt; &quot;what is up, doc?&quot;</span><br></pre></td></tr></table></figure>
+<p>Git 以对象类型作为开头来构造一个头部信息，本例中是一个“blob”字符串。 接着 Git 会添加一个空格，随后是数据内容的长度，最后是一个空字节（null byte）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt; header = &quot;blob #&#123;content.length&#125;\0&quot;</span><br><span class="line">=&gt; &quot;blob 16\u0000&quot;</span><br></pre></td></tr></table></figure>
+<p>Git 会将上述头部信息和原始数据拼接起来，并计算出这条新内容的 SHA-1 校验和。 在 Ruby 中可以这样计算 SHA-1 值——先通过 require 命令导入 SHA-1 digest 库，然后对目标字符串调用 Digest::SHA1.hexdigest()：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt; store = header + content</span><br><span class="line">=&gt; &quot;blob 16\u0000what is up, doc?&quot;</span><br><span class="line">&gt;&gt; require &apos;digest/sha1&apos;</span><br><span class="line">=&gt; true</span><br><span class="line">&gt;&gt; sha1 = Digest::SHA1.hexdigest(store)</span><br><span class="line">=&gt; &quot;bd9dbf5aae1a3862dd1526723246b20206e5fc37&quot;</span><br></pre></td></tr></table></figure>
+<p>Git 会通过 zlib 压缩这条新内容。在 Ruby 中可以借助 zlib 库做到这一点。 先导入相应的库，然后对目标内容调用 Zlib::Deflate.deflate()：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt; require &apos;zlib&apos;</span><br><span class="line">=&gt; true</span><br><span class="line">&gt;&gt; zlib_content = Zlib::Deflate.deflate(store)</span><br><span class="line">=&gt; &quot;x\x9CK\xCA\xC9OR04c(\xCFH,Q\xC8,V(-\xD0QH\xC9O\xB6\a\x00_\x1C\a\x9D&quot;</span><br></pre></td></tr></table></figure>
+<p>最后，需要将这条经由 zlib 压缩的内容写入磁盘上的某个对象。 要先确定待写入对象的路径（SHA-1 值的前两个字符作为子目录名称，后 38 个字符则作为子目录内文件的名称）。 如果该子目录不存在，可以通过 Ruby 中的 FileUtils.mkdir_p() 函数来创建它。 接着，通过 File.open() 打开这个文件。最后，对上一步中得到的文件句柄调用 write() 函数，以向目标文件写入之前那条 zlib 压缩过的内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt; path = &apos;.git/objects/&apos; + sha1[0,2] + &apos;/&apos; + sha1[2,38]</span><br><span class="line">=&gt; &quot;.git/objects/bd/9dbf5aae1a3862dd1526723246b20206e5fc37&quot;</span><br><span class="line">&gt;&gt; require &apos;fileutils&apos;</span><br><span class="line">=&gt; true</span><br><span class="line">&gt;&gt; FileUtils.mkdir_p(File.dirname(path))</span><br><span class="line">=&gt; &quot;.git/objects/bd&quot;</span><br><span class="line">&gt;&gt; File.open(path, &apos;w&apos;) &#123; |f| f.write zlib_content &#125;</span><br><span class="line">=&gt; 32</span><br></pre></td></tr></table></figure>
+<p>就是这样——你已创建了一个有效的 Git 数据对象。 所有的 Git 对象均以这种方式存储，区别仅在于类型标识——另两种对象类型的头部信息以字符串“commit”或“tree”开头，而不是“blob”。 另外，虽然数据对象的内容几乎可以是任何东西，但提交对象和树对象的内容却有各自固定的格式。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://git-scm.com/book/zh/v2" target="_blank" rel="external">https://git-scm.com/book/zh/v2</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/07/12/自定义Tabbar/" itemprop="url">
                   自定义Tabbar
                 </a>
@@ -1283,131 +1510,13 @@ https://ruby.taobao.org
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/11/13/记Hexo+github搭建个人博客的过程/" itemprop="url">
-                  记Hexo+github搭建个人博客的过程
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-11-13T15:40:25+08:00" content="2015-11-13">
-              2015-11-13
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/技术/" itemprop="url" rel="index">
-                    <span itemprop="name">技术</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/11/13/记Hexo+github搭建个人博客的过程/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/13/记Hexo+github搭建个人博客的过程/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="搭建博客前的准备工作"><a href="#搭建博客前的准备工作" class="headerlink" title="搭建博客前的准备工作"></a>搭建博客前的准备工作</h3><p> 1、安装Homebrew</p>
-<p>Homebrew是Mac OSX上的软件包管理工具，能在Mac中方便的安装软件或者卸载软件，在终端执行下面命令安装：</p>
-<pre><code>ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;
-</code></pre><p>安装完成后可以使用下面命令查看版本信息</p>
-<pre><code>npm -v
-</code></pre>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/11/13/记Hexo+github搭建个人博客的过程/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -1446,7 +1555,7 @@ https://ruby.taobao.org
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-count">11</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1454,7 +1563,7 @@ https://ruby.taobao.org
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
