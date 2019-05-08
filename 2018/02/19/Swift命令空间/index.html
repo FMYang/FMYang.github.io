@@ -67,7 +67,7 @@
 <meta property="og:description" content="之前在使用RxSwfit的时候对.rx这个东西的一直有些疑问，不清楚实现原理，趁着现在有些空余时间，打算深入研究下，于是有了这篇文章。
 通过学习，了解到rx其实就是一个命名空间的实现，关于Swift命名空间的说明，参考喵神的这篇文章。
 关于命名冲突Swift的命名空间是以模块来划分的，一个模块表示一个命名空间，我们进行APP开发是，默认添加到主target的内容是同处于同一个命名空间的。如果用Co">
-<meta property="og:updated_time" content="2019-05-08T09:07:35.105Z">
+<meta property="og:updated_time" content="2019-05-08T09:08:10.338Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Swift命名空间">
 <meta name="twitter:description" content="之前在使用RxSwfit的时候对.rx这个东西的一直有些疑问，不清楚实现原理，趁着现在有些空余时间，打算深入研究下，于是有了这篇文章。
@@ -294,6 +294,7 @@
         <p>之前在使用RxSwfit的时候对.rx这个东西的一直有些疑问，不清楚实现原理，趁着现在有些空余时间，打算深入研究下，于是有了这篇文章。</p>
 <p>通过学习，了解到rx其实就是一个命名空间的实现，关于Swift命名空间的说明，参考喵神的<a href="http://swifter.tips/namespace/" target="_blank" rel="external"><a href="http://swifter.tips/namespace/" target="_blank" rel="external">这篇文章</a></a>。</p>
 <h3 id="关于命名冲突"><a href="#关于命名冲突" class="headerlink" title="关于命名冲突"></a>关于命名冲突</h3><p>Swift的命名空间是以模块来划分的，一个模块表示一个命名空间，我们进行APP开发是，默认添加到主target的内容是同处于同一个命名空间的。如果用Cocoapod的方式导入的第三方库，是以一个单独的target存在，不会存在命名冲突。如果是以源码的方式导入工程中，很有可能发生命名冲突。所以，为了安全起见，第三方库都会使用命名空间这种方式来防止冲突。在Objective-C上没有命名空间，一般是使用方法名前面加前缀的方式避免冲突。</p>
+<a id="more"></a>
 <h3 id="命名空间原理"><a href="#命名空间原理" class="headerlink" title="命名空间原理"></a>命名空间原理</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> text = usernameLabel.rx.text.orEmpty.asObservable()</span><br></pre></td></tr></table></figure>
 <p>如果你对RxSwift熟悉的话，应该看过不少类似的代码。观察上面的代码，发现可以通过点语法访问rx，这说明rx是一个属性，rx又可以用点语法访问UILabel的text属性，说明rx是个数据结构。</p>
 <p>小结：<br>1、rx是个数据结构<br>2、rx是个属性</p>
