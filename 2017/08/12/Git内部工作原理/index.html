@@ -68,7 +68,7 @@ Git提供了非常丰富的指令集，根据功能划分为底层命令和高�
 Git提供了非常丰富的指令集，根据功能划分为底层命令和高层命令，平时工作中使用最多的add、commit、reset等就属于高层命令。大部分情况下我们不会接触到Git的底层命令，但是为了了解Git的工作原理，了解底层命令就很重要了。
 接下来我们来探索Git的内部工作">
 <meta property="og:image" content="http://yoursite.com/media/15573059903154.jpg">
-<meta property="og:updated_time" content="2019-05-08T09:00:20.121Z">
+<meta property="og:updated_time" content="2019-05-08T09:04:26.155Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git内部工作原理">
 <meta name="twitter:description" content="Git是一个快速，可扩展的分布式版本控制系统。从根本上来说，Git是一个内容寻址（content-addressable）文件系统。
@@ -296,6 +296,7 @@ Git提供了非常丰富的指令集，根据功能划分为底层命令和高�
         <p>Git是一个快速，可扩展的分布式版本控制系统。从根本上来说，Git是一个内容寻址（content-addressable）文件系统。</p>
 <p>Git提供了非常丰富的指令集，根据功能划分为底层命令和高层命令，平时工作中使用最多的add、commit、reset等就属于高层命令。大部分情况下我们不会接触到Git的底层命令，但是为了了解Git的工作原理，了解底层命令就很重要了。</p>
 <p>接下来我们来探索Git的内部工作原理</p>
+<a id="more"></a>
 <h1 id="git目录结构"><a href="#git目录结构" class="headerlink" title=".git目录结构"></a>.git目录结构</h1><p>首先我们新建一个空文件夹，执行<code>git init</code>初始化命令，创建git版本库。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir test1</span><br><span class="line">$ cd test1</span><br><span class="line">$ git init</span><br><span class="line">$ cd .git</span><br><span class="line">$ ls -F1</span><br><span class="line"></span><br><span class="line">.git目录结构如下：</span><br><span class="line">HEAD         // HEAD指针，指向当前分支</span><br><span class="line">branches/    // 分支</span><br><span class="line">config       // 项目特有的配置选项</span><br><span class="line">description  // 仅供 GitWeb 程序使用，无需关心</span><br><span class="line">hooks/       // 客户端或服务端的钩子脚本</span><br><span class="line">info/        </span><br><span class="line">objects/     // 存储所有数据内容</span><br><span class="line">refs/        // 存储指向数据（分支）的提交对象的指针</span><br><span class="line">index        // 保存暂存区信息（尚待创建）</span><br></pre></td></tr></table></figure>
 <p>.git的目录结构及作用上面已经添加了备注，其中有四个条目很重要：HEAD文件、尚未创建的index文件，和objects目录、refs目录。这些条目是Git的核心组成部分。</p>
@@ -437,6 +438,10 @@ Git提供了非常丰富的指令集，根据功能划分为底层命令和高�
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2018/02/19/Swift命令空间/" rel="prev" title="Swift命名空间">
+                Swift命名空间 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -507,7 +512,7 @@ Git提供了非常丰富的指令集，根据功能划分为底层命令和高�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-count">12</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -515,7 +520,7 @@ Git提供了非常丰富的指令集，根据功能划分为底层命令和高�
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -524,7 +529,7 @@ Git提供了非常丰富的指令集，根据功能划分为底层命令和高�
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
