@@ -929,7 +929,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2017-07-13 16:59:12" itemprop="dateModified" datetime="2017-07-13T16:59:12+08:00">2017-07-13</time>
+                <time title="修改时间：2019-05-08 21:11:30" itemprop="dateModified" datetime="2019-05-08T21:11:30+08:00">2019-05-08</time>
               
             
           </span>
@@ -995,19 +995,6 @@
 <ul>
 <li>当名称有多个单词组成的时候，不要使用特殊的字符，例如标点符号，下划线或者破折号等作为成员变量的组成部分。</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">以下是错误的类型:</span><br><span class="line">@property (nonatomic, assing) NSIngeter key_Value; (下划线类型)   </span><br><span class="line">@property (nonatomic, assign) NSIngeter #keyValue; (符号类型)     </span><br><span class="line">@property (nonatomic, assign) NSIngeter key-Value; (破折号类型)</span><br><span class="line"></span><br><span class="line">正确的方式应该是:</span><br><span class="line">@property (nonamatic, assign) NSIngeter keyValue;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>成员变量的命名尽量做到简单易懂，不要产生歧义。例如：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic, copy) NSString *userName;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>对于有些特殊类型的属性命名的时候加上类型。例如：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic, strong) NSArray *nameArr;</span><br><span class="line">@property (nonatomic, strong) NSDictionary *valueDict;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>在特殊情况下首单词是大家都知道的，使用缩写，例如：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic, strong) NSURLRequest *HTTPRequest; //一个HTTPS请求</span><br></pre></td></tr></table></figure>
           <!--noindex-->
           
             <div class="post-button text-center">
