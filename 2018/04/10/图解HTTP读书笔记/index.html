@@ -108,7 +108,6 @@ TCP/IP协议族内预存了各类通用的应用服务。比如，FTP和DNS（Do
 TCP/IP的分层管理1、应用层
 应用层决定了向用户提供应用服务时通信的活动。
 TCP/IP协议族内预存了各类通用的应用服务。比如，FTP和DNS（Domain Name，域名系统）服务就是其中的两类。">
-<meta property="og:image" content="http://yoursite.com/media/15575085506660.jpg">
 <meta property="og:image" content="http://yoursite.com/media/15575063925760.jpg">
 <meta property="og:image" content="http://yoursite.com/media/15575064026943.jpg">
 <meta property="og:image" content="http://yoursite.com/media/15575064094489.jpg">
@@ -120,14 +119,14 @@ TCP/IP协议族内预存了各类通用的应用服务。比如，FTP和DNS（Do
 <meta property="og:image" content="http://yoursite.com/media/15575064562736.jpg">
 <meta property="og:image" content="http://yoursite.com/media/15575064613721.jpg">
 <meta property="og:image" content="http://yoursite.com/media/15575064701204.jpg">
-<meta property="og:updated_time" content="2019-05-10T17:16:09.072Z">
+<meta property="og:updated_time" content="2019-05-10T17:18:00.454Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图解HTTP读书笔记">
 <meta name="twitter:description" content="网络基础HTTP是TCP/IP协议族的一个子集
 TCP/IP的分层管理1、应用层
 应用层决定了向用户提供应用服务时通信的活动。
 TCP/IP协议族内预存了各类通用的应用服务。比如，FTP和DNS（Domain Name，域名系统）服务就是其中的两类。">
-<meta name="twitter:image" content="http://yoursite.com/media/15575085506660.jpg">
+<meta name="twitter:image" content="http://yoursite.com/media/15575063925760.jpg">
 
 
 
@@ -408,7 +407,7 @@ TCP/IP协议族内预存了各类通用的应用服务。比如，FTP和DNS（Do
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-11 01:16:09" itemprop="dateModified" datetime="2019-05-11T01:16:09+08:00">2019-05-11</time>
+                <time title="修改时间：2019-05-11 01:18:00" itemprop="dateModified" datetime="2019-05-11T01:18:00+08:00">2019-05-11</time>
               
             
           </span>
@@ -487,8 +486,7 @@ TCP/IP协议族内预存了各类通用的应用服务。比如，FTP和DNS（Do
 <p>与对方计算机之间通过多台计算机或网络设备进行传送时，网络层的作用是在众多的选项内选择一条传输路线。</p>
 <p>4、链路层（又名数据链路层，网络接口层）</p>
 <p>用来处理连接网络的硬件部分。包括控制操作系统、硬件的设备驱动、NIC（Network Interface Card，网络适配器，即网卡），及光纤等物理可见部分。硬件上的范畴均在链路层作用范围之内。</p>
-<h3 id="TCP-IP通讯传输流"><a href="#TCP-IP通讯传输流" class="headerlink" title="TCP/IP通讯传输流"></a>TCP/IP通讯传输流</h3><p><img src="/media/15575085506660.jpg" alt="-w418"></p>
-<p><img src="/media/15575063925760.jpg" alt="-w419"></p>
+<h3 id="TCP-IP通讯传输流"><a href="#TCP-IP通讯传输流" class="headerlink" title="TCP/IP通讯传输流"></a>TCP/IP通讯传输流</h3><p><img src="/media/15575063925760.jpg" alt="-w419"></p>
 <p>利用TCP/IP协议族进行网络通讯时，会通过分层顺序与对方进行通讯。发送端从应用层往下走，接收端则从链路层往上走。</p>
 <p>以HTTP举例说明，作为发送端的客户在应用层（HTTP协议）发送一个想看某个Web页面的HTTP请求。</p>
 <p>1、应用端发起HTTP请求<br>2、为了传输方便，在传输层（TCP协议）把从应用层收到的数据（HTTP请求报文）进行分割，并在各个报文上打上标记序号及端口号后转发给网络层。<br>3、在网络层（IP协议），增加作为通信目的地的MAC地址后转发给链路层。这样一来，发往网络的通信请求就准备齐全了。</p>
