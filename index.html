@@ -326,6 +326,230 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/20/SDWebImage、Kingfisher加载大图解决方案/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="kawa"/>
+      <meta itemprop="description" content="The world is his who enjoys it."/>
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/3436190?s=400&u=b9ee0b1957d16cc9bd0064cdf1d44e26a28a8792&v=4"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kawa的随想录"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/02/20/SDWebImage、Kingfisher加载大图解决方案/" class="post-title-link" itemprop="url">SDWebImage、Kingfisher加载大图解决方案</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-02-20 22:18:29" itemprop="dateCreated datePublished" datetime="2019-02-20T22:18:29+08:00">2019-02-20</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-07-22 19:12:10" itemprop="dateModified" datetime="2019-07-22T19:12:10+08:00">2019-07-22</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2019/02/20/SDWebImage、Kingfisher加载大图解决方案/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/02/20/SDWebImage、Kingfisher加载大图解决方案/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近做一个功能，遇到内存暴增导致应用崩溃的问题。这边文章就记录下解决的过程。</p>
+<p>先来看下是界面长什么样子：</p>
+<p><img src="/media/Simulator%20Screen%20Shot%20-%20iPhone%208%20-%202019-07-22%20at%2017.29.36.png" alt="Simulator Screen Shot - iPhone 8 - 2019-07-22 at 17.29.36"></p>
+<p>如图所示，一个类似微信朋友圈的界面。</p>
+<p>因为项目是用swift写的，所以图片加载用的是Kingfisher这个库。</p>
+<h2 id="定位问题"><a href="#定位问题" class="headerlink" title="定位问题"></a>定位问题</h2><p>这个界面的布局很简单，一个tableview，9中不同类型的cell。啪啪啪，很快我就完成了原型设计，加载了数据。但是滑动起来发现很卡，快速滑动的时候更明显。使用FPS工具检测下，发现大概每秒只有30-40帧，快速滑动的时候内存飙到了7、8百兆，最后闪退。</p>
+<p>检查下cell有没有复用，发现没有什么问题。开始以为是图片框架问题，换SDWebImage(4.4.2)看了下，一样的内存问题。</p>
+<p>用Instruments检测了下，定位到问题在SDWebImage解码这行。正常大小的图片解码肯定是没有内存问题，于是打开沙盒看了下图片大小，发现大多都是宽高为1300 <em> 2000、2000</em>2000像素这样的大图，这里的大图是指图片宽高的像素比较大，实际图片的大小也不大，100多Kb的样子。</p>
+<p>这里要说下图片是怎么展示的，JPEG、PNG这样的图片是压缩格式，要渲染到屏幕上，最终都要解压到位图上。位图的计算是根据图片的宽高所占的像素点来计算的，计算公式为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bitmap_size = imageSize.width * imageSize.height * bytesPerPixel</span><br></pre></td></tr></table></figure>
+<p>1个像素占多少位（bit），与屏幕分辩率和有关，这里假设一个像素占8位，一个100KB，宽高为2000<em>2000的图片，解码之后，位图的大小为`2000</em>2000*8`bit，大约30MB.</p>
+<p>一张图就这么大，图片一多当然内存吃紧了。</p>
+<h2 id="SDWebImage解决方案"><a href="#SDWebImage解决方案" class="headerlink" title="SDWebImage解决方案"></a>SDWebImage解决方案</h2><p>SDWebImage对图片解码是根据原图的宽高来解码的，要解决内存问题首先想到是对原图进行缩放，按缩放之后的宽高解码图片。</p>
+<p>思路有了，开始行动吧。打开<code>SDWebImageImageIOCoder.m</code>文件，定位到<code>- (nullable UIImage *)sd_decompressedImageWithImage:(nullable UIImage *)image</code>这个方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">- (nullable UIImage *)sd_decompressedImageWithImage:(nullable UIImage *)image &#123;</span><br><span class="line">    if (![[self class] shouldDecodeImage:image]) &#123;</span><br><span class="line">        return image;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // autorelease the bitmap context and all vars to help system to free memory when there are memory warning.</span><br><span class="line">    // on iOS7, do not forget to call [[SDImageCache sharedImageCache] clearMemory];</span><br><span class="line">    @autoreleasepool&#123;</span><br><span class="line">        </span><br><span class="line">        CGImageRef imageRef = image.CGImage;</span><br><span class="line">        // device color space</span><br><span class="line">        CGColorSpaceRef colorspaceRef = SDCGColorSpaceGetDeviceRGB();</span><br><span class="line">        BOOL hasAlpha = SDCGImageRefContainsAlpha(imageRef);</span><br><span class="line">        // iOS display alpha info (BRGA8888/BGRX8888)</span><br><span class="line">        CGBitmapInfo bitmapInfo = kCGBitmapByteOrder32Host;</span><br><span class="line">        bitmapInfo |= hasAlpha ? kCGImageAlphaPremultipliedFirst : kCGImageAlphaNoneSkipFirst;</span><br><span class="line">        </span><br><span class="line">        // 按原图宽高计算位图大小</span><br><span class="line">        // size_t width = CGImageGetWidth(imageRef);</span><br><span class="line">        // size_t height = CGImageGetHeight(imageRef);</span><br><span class="line">        </span><br><span class="line">        // 修改为自定的大小</span><br><span class="line">        size_t width = 100;</span><br><span class="line">        size_t height = 100;</span><br><span class="line">        .</span><br><span class="line">        .</span><br><span class="line">        .</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在解码的方法里，我们将位图大小的计算改为了100*100，重新编译运行下APP，发现没有还是有内存问题。</p>
+<p>再次定位问题，发现图片缓存的时候分为内存缓存和磁盘缓存，内存缓存使用的image数据，磁盘缓存使用的是图片的二进制数据imageData，解压那一步，我们只是修改了image数据，图片二进制数据还是原图的数据，没有用我们压缩之后的图片数据。</p>
+<p>我们修改下图片缓存的地方，将缓存到磁盘的数据改为我们压缩后的图片的数据就行了。</p>
+<p>打开SDImageCache.m文件，定位到下面这个方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (void)storeImage:(nullable UIImage *)image</span><br><span class="line">         imageData:(nullable NSData *)imageData</span><br><span class="line">            forKey:(nullable NSString *)key</span><br><span class="line">            toDisk:(BOOL)toDisk</span><br><span class="line">        completion:(nullable SDWebImageNoParamsBlock)completionBlock</span><br></pre></td></tr></table></figure>
+<p>修改源码，修改部分见注释：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">- (void)storeImage:(nullable UIImage *)image</span><br><span class="line">         imageData:(nullable NSData *)imageData</span><br><span class="line">            forKey:(nullable NSString *)key</span><br><span class="line">            toDisk:(BOOL)toDisk</span><br><span class="line">        completion:(nullable SDWebImageNoParamsBlock)completionBlock &#123;</span><br><span class="line">    if (!image || !key) &#123;</span><br><span class="line">        if (completionBlock) &#123;</span><br><span class="line">            completionBlock();</span><br><span class="line">        &#125;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    // if memory cache is enabled</span><br><span class="line">    if (self.config.shouldCacheImagesInMemory) &#123;</span><br><span class="line">        NSUInteger cost = SDCacheCostForImage(image);</span><br><span class="line">        [self.memCache setObject:image forKey:key cost:cost];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (toDisk) &#123;</span><br><span class="line">        dispatch_async(self.ioQueue, ^&#123;</span><br><span class="line">            @autoreleasepool &#123;</span><br><span class="line">            /* </span><br><span class="line">                这里不使用图片原始数据imageData，</span><br><span class="line">                使用修改之后（解码那步已经修改了）的image，</span><br><span class="line">                保证缓存磁盘的图片也是压缩后的图片</span><br><span class="line">                */</span><br><span class="line">                NSData *data = UIImageJPEGRepresentation(image, 1.0);</span><br><span class="line">//                NSData *data = imageData;</span><br><span class="line">                NSData *data = imageData;</span><br><span class="line">                if (!data &amp;&amp; image) &#123;</span><br><span class="line">                    // If we do not have any data to detect image format, check whether it contains alpha channel to use PNG or JPEG format</span><br><span class="line">                    SDImageFormat format;</span><br><span class="line">                    if (SDCGImageRefContainsAlpha(image.CGImage)) &#123;</span><br><span class="line">                        format = SDImageFormatPNG;</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        format = SDImageFormatJPEG;</span><br><span class="line">                    &#125;</span><br><span class="line">                    data = [[SDWebImageCodersManager sharedInstance] encodedDataWithImage:image format:format];</span><br><span class="line">                &#125;</span><br><span class="line">                [self _storeImageDataToDisk:data forKey:key];</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            if (completionBlock) &#123;</span><br><span class="line">                dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">                    completionBlock();</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        if (completionBlock) &#123;</span><br><span class="line">            completionBlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>经过上面两处修改，再次编译运行，发现内存问题解决了，很好，god job！。</p>
+<p>但是，稍微思考下，就发现更改的时机貌似不对。上面我们修改了两处代码，分别是解码和缓存的地方。解码有好几处地方，上面的改法不严谨，正确的压缩图片的地方应该是在下载完成之后。</p>
+<p>OK，我们定位到图片下载完成的地方，打开<code>SDWebImageDownloaderOperation.m</code>文件，定位到<code>NSURLSession</code>下载完成的代理方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark NSURLSessionTaskDelegate</span><br><span class="line"></span><br><span class="line">- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error &#123;</span><br><span class="line">    @synchronized(self) &#123;</span><br><span class="line">        self.dataTask = nil;</span><br><span class="line">        __weak typeof(self) weakSelf = self;</span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">            [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:weakSelf];</span><br><span class="line">            if (!error) &#123;</span><br><span class="line">                [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadFinishNotification object:weakSelf];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // make sure to call `[self done]` to mark operation as finished</span><br><span class="line">    if (error) &#123;</span><br><span class="line">        [self callCompletionBlocksWithError:error];</span><br><span class="line">        [self done];</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        if ([self callbacksForKey:kCompletedCallbackKey].count &gt; 0) &#123;</span><br><span class="line">            /**</span><br><span class="line">             *  If you specified to use `NSURLCache`, then the response you get here is what you need.</span><br><span class="line">             */</span><br><span class="line">            __block NSData *imageData = [self.imageData copy];</span><br><span class="line">            </span><br><span class="line">            ///////////////</span><br><span class="line">            UIImage *testImage = [[UIImage alloc] initWithData:imageData];</span><br><span class="line">            NSLog(@&quot;网络请求完成：%@&quot;, NSStringFromCGSize(testImage.size));</span><br><span class="line">            </span><br><span class="line">            CGSize size = CGSizeMake(200, 100);</span><br><span class="line">            UIGraphicsBeginImageContext(size);</span><br><span class="line">            [testImage drawInRect:CGRectMake(0, 0, size.width, size.height)];</span><br><span class="line">            UIImage *aimage = UIGraphicsGetImageFromCurrentImageContext();</span><br><span class="line">            UIGraphicsEndImageContext();</span><br><span class="line">            NSLog(@&quot;压缩网络下载图片之后的新图尺寸： %@&quot;, NSStringFromCGSize(aimage.size));</span><br><span class="line"></span><br><span class="line">            // 在这里（图片下载完成的代理）修改图片的原始数据，再也不会有内存问题了</span><br><span class="line">            imageData = UIImageJPEGRepresentation(aimage, 1.0);</span><br><span class="line">            ///////////////</span><br><span class="line">            </span><br><span class="line">            if (imageData) &#123;</span><br><span class="line">                /**  if you specified to only use cached data via `SDWebImageDownloaderIgnoreCachedResponse`,</span><br><span class="line">                 *  then we should check if the cached data is equal to image data</span><br><span class="line">                 */</span><br><span class="line">                if (self.options &amp; SDWebImageDownloaderIgnoreCachedResponse &amp;&amp; [self.cachedData isEqualToData:imageData]) &#123;</span><br><span class="line">                    // call completion block with nil</span><br><span class="line">                    [self callCompletionBlocksWithImage:nil imageData:nil error:nil finished:YES];</span><br><span class="line">                    [self done];</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    // decode the image in coder queue</span><br><span class="line">                    dispatch_async(self.coderQueue, ^&#123;</span><br><span class="line">                        UIImage *image = [[SDWebImageCodersManager sharedInstance] decodedImageWithData:imageData];</span><br><span class="line">                        NSString *key = [[SDWebImageManager sharedManager] cacheKeyForURL:self.request.URL];</span><br><span class="line">                        image = [self scaledImageForKey:key image:image];</span><br><span class="line">                        </span><br><span class="line">                        BOOL shouldDecode = YES;</span><br><span class="line">                        // Do not force decoding animated GIFs and WebPs</span><br><span class="line">                        if (image.images) &#123;</span><br><span class="line">                            shouldDecode = NO;</span><br><span class="line">                        &#125; else &#123;</span><br><span class="line">#ifdef SD_WEBP</span><br><span class="line">                            SDImageFormat imageFormat = [NSData sd_imageFormatForImageData:imageData];</span><br><span class="line">                            if (imageFormat == SDImageFormatWebP) &#123;</span><br><span class="line">                                shouldDecode = NO;</span><br><span class="line">                            &#125;</span><br><span class="line">#endif</span><br><span class="line">                        &#125;</span><br><span class="line">                        </span><br><span class="line">                        if (shouldDecode) &#123;</span><br><span class="line">                            if (self.shouldDecompressImages) &#123;</span><br><span class="line">                                BOOL shouldScaleDown = self.options &amp; SDWebImageDownloaderScaleDownLargeImages;</span><br><span class="line">                                image = [[SDWebImageCodersManager sharedInstance] decompressedImageWithImage:image data:&amp;imageData options:@&#123;SDWebImageCoderScaleDownLargeImagesKey: @(shouldScaleDown)&#125;];</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                        CGSize imageSize = image.size;</span><br><span class="line">                        if (imageSize.width == 0 || imageSize.height == 0) &#123;</span><br><span class="line">                            [self callCompletionBlocksWithError:[NSError errorWithDomain:SDWebImageErrorDomain code:0 userInfo:@&#123;NSLocalizedDescriptionKey : @&quot;Downloaded image has 0 pixels&quot;&#125;]];</span><br><span class="line">                        &#125; else &#123;</span><br><span class="line">                            [self callCompletionBlocksWithImage:image imageData:imageData error:nil finished:YES];</span><br><span class="line">                        &#125;</span><br><span class="line">                        [self done];</span><br><span class="line">                    &#125;);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                [self callCompletionBlocksWithError:[NSError errorWithDomain:SDWebImageErrorDomain code:0 userInfo:@&#123;NSLocalizedDescriptionKey : @&quot;Image data is nil&quot;&#125;]];</span><br><span class="line">                [self done];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            [self done];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修改的地方见注释///////////////包含起来的代码。</p>
+<p>保留下载完成之后修改的部分代码，再次编译运行代码，发现内存问题解决了，以上是SDWebImage的解决方案。</p>
+<h2 id="Kingfisher解决方案"><a href="#Kingfisher解决方案" class="headerlink" title="Kingfisher解决方案"></a>Kingfisher解决方案</h2><p>毕竟项目是用swift写的，还是改回Swift库，Kingfisher这里使用的版本是4.10.0。</p>
+<p>经过上面一番折腾，Kingfisher的源码修改就很简单了。</p>
+<p>打开<code>ImageDownloader.swift</code>文件，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br></pre></td><td class="code"><pre><span class="line">    ///////////////////////// add by yfm</span><br><span class="line">    </span><br><span class="line">    /// 按屏幕宽度等比压缩图片</span><br><span class="line">    ///</span><br><span class="line">    /// - Parameter image: 目标图片</span><br><span class="line">    /// - Returns: 压缩后的图片</span><br><span class="line">    private func scaleImage(image: UIImage?) -&gt; UIImage &#123;</span><br><span class="line">        guard let image = image else &#123; return UIImage() &#125;</span><br><span class="line">        let screenWidth = UIScreen.main.bounds.size.width</span><br><span class="line">//        let screenHeight = UIScreen.main.bounds.size.height</span><br><span class="line">        let imageWidth = image.size.width</span><br><span class="line">        let imageHeight = image.size.height</span><br><span class="line">        var targetWidth: CGFloat = 0.0</span><br><span class="line">        var targetHeight: CGFloat = 0.0</span><br><span class="line">        if imageWidth &gt; screenWidth &#123;</span><br><span class="line">            targetWidth = screenWidth</span><br><span class="line">            targetHeight = screenWidth * imageHeight / imageWidth</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            targetWidth = imageWidth</span><br><span class="line">            targetHeight = imageHeight</span><br><span class="line">        &#125;</span><br><span class="line">        let size = CGSize(width: targetWidth, height: targetHeight)</span><br><span class="line">        UIGraphicsBeginImageContext(size);</span><br><span class="line">        image.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))</span><br><span class="line">        let newImage = UIGraphicsGetImageFromCurrentImageContext()</span><br><span class="line">        UIGraphicsEndImageContext()</span><br><span class="line">        return newImage ?? UIImage()</span><br><span class="line">    &#125;</span><br><span class="line">    /////////////////////////</span><br><span class="line">    </span><br><span class="line">    private func callCompletionHandlerFailure(error: Error, url: URL) &#123;</span><br><span class="line">        guard let downloader = downloadHolder, let fetchLoad = downloader.fetchLoad(for: url) else &#123;</span><br><span class="line">            return</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        // We need to clean the fetch load first, before actually calling completion handler.</span><br><span class="line">        cleanFetchLoad(for: url)</span><br><span class="line">        </span><br><span class="line">        var leftSignal: Int</span><br><span class="line">        repeat &#123;</span><br><span class="line">            leftSignal = fetchLoad.cancelSemaphore?.signal() ?? 0</span><br><span class="line">        &#125; while leftSignal != 0</span><br><span class="line">        </span><br><span class="line">        for content in fetchLoad.contents &#123;</span><br><span class="line">            content.options.callbackDispatchQueue.safeAsync &#123;</span><br><span class="line">                content.callback.completionHandler?(nil, error as NSError, url, nil)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    private func processImage(for task: URLSessionTask, url: URL) &#123;</span><br><span class="line"></span><br><span class="line">        guard let downloader = downloadHolder else &#123;</span><br><span class="line">            return</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        // We are on main queue when receiving this.</span><br><span class="line">        downloader.processQueue.async &#123;</span><br><span class="line">            </span><br><span class="line">            guard let fetchLoad = downloader.fetchLoad(for: url) else &#123;</span><br><span class="line">                return</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            self.cleanFetchLoad(for: url)</span><br><span class="line">            </span><br><span class="line">            let data: Data?</span><br><span class="line">            let fetchedData = fetchLoad.responseData as Data</span><br><span class="line">            </span><br><span class="line">            if let delegate = downloader.delegate &#123;</span><br><span class="line">                data = delegate.imageDownloader(downloader, didDownload: fetchedData, for: url)</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                data = fetchedData</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            //////////////</span><br><span class="line">            let image = UIImage(data: data ?? Data())</span><br><span class="line">            let newImage = self.scaleImage(image: image)</span><br><span class="line">            let newData = newImage.jpegData(compressionQuality: 1.0)</span><br><span class="line">            //////////////</span><br><span class="line">            </span><br><span class="line">            // Cache the processed images. So we do not need to re-process the image if using the same processor.</span><br><span class="line">            // Key is the identifier of processor.</span><br><span class="line">            var imageCache: [String: Image] = [:]</span><br><span class="line">            for content in fetchLoad.contents &#123;</span><br><span class="line">                </span><br><span class="line">                let options = content.options</span><br><span class="line">                let completionHandler = content.callback.completionHandler</span><br><span class="line">                let callbackQueue = options.callbackDispatchQueue</span><br><span class="line">                </span><br><span class="line">                let processor = options.processor</span><br><span class="line">                var image = imageCache[processor.identifier]</span><br><span class="line">                //////////////</span><br><span class="line">                if let data = newData, image == nil &#123; // 这是修改后的，原实现是下面这行</span><br><span class="line">                //////////////</span><br><span class="line">//                if let data = data, image == nil &#123;</span><br><span class="line">                    image = processor.process(item: .data(data), options: options)</span><br><span class="line">                    print(&quot;kingfisher image size: \(String(describing: image?.size))&quot;)</span><br><span class="line">                    // Add the processed image to cache. </span><br><span class="line">                    // If `image` is nil, nothing will happen (since the key is not existing before).</span><br><span class="line">                    imageCache[processor.identifier] = image</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">                if let image = image &#123;</span><br><span class="line"></span><br><span class="line">                    downloader.delegate?.imageDownloader(downloader, didDownload: image, for: url, with: task.response)</span><br><span class="line"></span><br><span class="line">                    let imageModifier = options.imageModifier</span><br><span class="line">                    let finalImage = imageModifier.modify(image)</span><br><span class="line"></span><br><span class="line">                    if options.backgroundDecode &#123;</span><br><span class="line">                        let decodedImage = finalImage.kf.decoded</span><br><span class="line">                        callbackQueue.safeAsync &#123; completionHandler?(decodedImage, nil, url, data) &#125;</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        callbackQueue.safeAsync &#123; completionHandler?(finalImage, nil, url, data) &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    </span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    if let res = task.response as? HTTPURLResponse , res.statusCode == 304 &#123;</span><br><span class="line">                        let notModified = NSError(domain: KingfisherErrorDomain, code: KingfisherError.notModified.rawValue, userInfo: nil)</span><br><span class="line">                        completionHandler?(nil, notModified, url, nil)</span><br><span class="line">                        continue</span><br><span class="line">                    &#125;</span><br><span class="line">                    </span><br><span class="line">                    let badData = NSError(domain: KingfisherErrorDomain, code: KingfisherError.badData.rawValue, userInfo: nil)</span><br><span class="line">                    callbackQueue.safeAsync &#123; completionHandler?(nil, badData, url, nil) &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>修改部分如上//////////////包含的地方。</p>
+<h2 id="三方库修改问题"><a href="#三方库修改问题" class="headerlink" title="三方库修改问题"></a>三方库修改问题</h2><p>以上修改，都是直接在pods目录下，修改的对应源文件。这样修改有个问题就是，下次执行pod install后，之前修改的代码会被覆盖。这里可能有人会以源码引入的方式修改，这样改也可以，但是不太好。</p>
+<p>最好的方式就是去github上fork一份代码，拉一个对应版本的分支修改，修改完之后打个tag发布到自己fork的仓库下。</p>
+<p>基于Kingfisher4.10.0，我上传了一个修改后的版本，地址为<a href="https://github.com/FMYang/Kingfisher/tree/4.10.0-beta。" target="_blank" rel="external">https://github.com/FMYang/Kingfisher/tree/4.10.0-beta。</a></p>
+<p>cocoapods引用方式修改为下面这样即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pod &apos;Kingfisher&apos;, :git =&gt; &apos;git@github.com:FMYang/Kingfisher.git&apos;, :tag =&gt; &apos;4.10.0-beta&apos;</span><br></pre></td></tr></table></figure>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>一般情况下，图片应该由后台压缩。客户端处理这样的情况是不合适的，不仅浪费流量，还影响用户体验，但是也有些公司会这样做。如果遇到这样的问题，最好的解决方法是让后台人员进行修改，而不是上述这种解决方式。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/12/Codable的基本用法/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2075,198 +2299,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/10/Block的使用及原理/"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="kawa"/>
-      <meta itemprop="description" content="The world is his who enjoys it."/>
-      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/3436190?s=400&u=b9ee0b1957d16cc9bd0064cdf1d44e26a28a8792&v=4"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="kawa的随想录"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2017/05/10/Block的使用及原理/" class="post-title-link" itemprop="url">Block的使用及原理</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-05-10 23:00:00" itemprop="dateCreated datePublished" datetime="2017-05-10T23:00:00+08:00">2017-05-10</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-05-13 22:14:18" itemprop="dateModified" datetime="2019-05-13T22:14:18+08:00">2019-05-13</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-              
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">评论数：</span>
-                <a href="/2017/05/10/Block的使用及原理/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/05/10/Block的使用及原理/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Objective-C定义了一个将数据和相关行为相结合的对象Blocks。Blocks是添加到C、Objective-C和C ++语言级的功能，它允许你创建不同的代码段，这些代码段可以像值一样传递给方法或函数。Blocks是一个Objective-C对象，意味着它们能添加到像NSArray或NSDictionary这样的集合中。在Objective-C语言中Blocks称为‘块’，在其他语言和环境中，Block有时也称为闭包或lambda。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2017/05/10/Block的使用及原理/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2317,7 +2349,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2411,7 +2443,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
