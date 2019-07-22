@@ -388,7 +388,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-07-22 19:12:10" itemprop="dateModified" datetime="2019-07-22T19:12:10+08:00">2019-07-22</time>
+                <time title="修改时间：2019-07-22 19:16:02" itemprop="dateModified" datetime="2019-07-22T19:16:02+08:00">2019-07-22</time>
               
             
           </span>
@@ -462,15 +462,15 @@
 <p>因为项目是用swift写的，所以图片加载用的是Kingfisher这个库。</p>
 <h2 id="定位问题"><a href="#定位问题" class="headerlink" title="定位问题"></a>定位问题</h2><p>这个界面的布局很简单，一个tableview，9中不同类型的cell。啪啪啪，很快我就完成了原型设计，加载了数据。但是滑动起来发现很卡，快速滑动的时候更明显。使用FPS工具检测下，发现大概每秒只有30-40帧，快速滑动的时候内存飙到了7、8百兆，最后闪退。</p>
 <p>检查下cell有没有复用，发现没有什么问题。开始以为是图片框架问题，换SDWebImage(4.4.2)看了下，一样的内存问题。</p>
-<p>用Instruments检测了下，定位到问题在SDWebImage解码这行。正常大小的图片解码肯定是没有内存问题，于是打开沙盒看了下图片大小，发现大多都是宽高为1300 <em> 2000、2000</em>2000像素这样的大图，这里的大图是指图片宽高的像素比较大，实际图片的大小也不大，100多Kb的样子。</p>
+<p>用Instruments检测了下，定位到问题在SDWebImage解码这行。正常大小的图片解码肯定是没有内存问题，于是打开沙盒看了下图片大小，发现大多都是宽高为1300 x 2000、2000 x 2000像素这样的大图，这里的大图是指图片宽高的像素比较大，实际图片的大小也不大，100多Kb的样子。</p>
 <p>这里要说下图片是怎么展示的，JPEG、PNG这样的图片是压缩格式，要渲染到屏幕上，最终都要解压到位图上。位图的计算是根据图片的宽高所占的像素点来计算的，计算公式为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bitmap_size = imageSize.width * imageSize.height * bytesPerPixel</span><br></pre></td></tr></table></figure>
-<p>1个像素占多少位（bit），与屏幕分辩率和有关，这里假设一个像素占8位，一个100KB，宽高为2000<em>2000的图片，解码之后，位图的大小为`2000</em>2000*8`bit，大约30MB.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bitmap_size = imageSize.width x imageSize.height x bytesPerPixel</span><br></pre></td></tr></table></figure>
+<p>1个像素占多少位（bit），与屏幕分辩率和有关，这里假设一个像素占8位，一个100KB，宽高为2000 x 2000的图片，解码之后，位图的大小为<code>2000 x 2000 x 8</code>bit，大约30MB.</p>
 <p>一张图就这么大，图片一多当然内存吃紧了。</p>
 <h2 id="SDWebImage解决方案"><a href="#SDWebImage解决方案" class="headerlink" title="SDWebImage解决方案"></a>SDWebImage解决方案</h2><p>SDWebImage对图片解码是根据原图的宽高来解码的，要解决内存问题首先想到是对原图进行缩放，按缩放之后的宽高解码图片。</p>
 <p>思路有了，开始行动吧。打开<code>SDWebImageImageIOCoder.m</code>文件，定位到<code>- (nullable UIImage *)sd_decompressedImageWithImage:(nullable UIImage *)image</code>这个方法。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">- (nullable UIImage *)sd_decompressedImageWithImage:(nullable UIImage *)image &#123;</span><br><span class="line">    if (![[self class] shouldDecodeImage:image]) &#123;</span><br><span class="line">        return image;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // autorelease the bitmap context and all vars to help system to free memory when there are memory warning.</span><br><span class="line">    // on iOS7, do not forget to call [[SDImageCache sharedImageCache] clearMemory];</span><br><span class="line">    @autoreleasepool&#123;</span><br><span class="line">        </span><br><span class="line">        CGImageRef imageRef = image.CGImage;</span><br><span class="line">        // device color space</span><br><span class="line">        CGColorSpaceRef colorspaceRef = SDCGColorSpaceGetDeviceRGB();</span><br><span class="line">        BOOL hasAlpha = SDCGImageRefContainsAlpha(imageRef);</span><br><span class="line">        // iOS display alpha info (BRGA8888/BGRX8888)</span><br><span class="line">        CGBitmapInfo bitmapInfo = kCGBitmapByteOrder32Host;</span><br><span class="line">        bitmapInfo |= hasAlpha ? kCGImageAlphaPremultipliedFirst : kCGImageAlphaNoneSkipFirst;</span><br><span class="line">        </span><br><span class="line">        // 按原图宽高计算位图大小</span><br><span class="line">        // size_t width = CGImageGetWidth(imageRef);</span><br><span class="line">        // size_t height = CGImageGetHeight(imageRef);</span><br><span class="line">        </span><br><span class="line">        // 修改为自定的大小</span><br><span class="line">        size_t width = 100;</span><br><span class="line">        size_t height = 100;</span><br><span class="line">        .</span><br><span class="line">        .</span><br><span class="line">        .</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在解码的方法里，我们将位图大小的计算改为了100*100，重新编译运行下APP，发现没有还是有内存问题。</p>
+<p>在解码的方法里，我们将位图大小的计算改为了100 x 100，重新编译运行下APP，发现没有还是有内存问题。</p>
 <p>再次定位问题，发现图片缓存的时候分为内存缓存和磁盘缓存，内存缓存使用的image数据，磁盘缓存使用的是图片的二进制数据imageData，解压那一步，我们只是修改了image数据，图片二进制数据还是原图的数据，没有用我们压缩之后的图片数据。</p>
 <p>我们修改下图片缓存的地方，将缓存到磁盘的数据改为我们压缩后的图片的数据就行了。</p>
 <p>打开SDImageCache.m文件，定位到下面这个方法：</p>
